@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --require tsconfig-paths/register --exec ts-node src/index.ts",
     "build": "tsc"
   },
   "keywords": [],
@@ -15,17 +15,21 @@
     "@types/dotenv": "^6.1.1",
     "@types/sequelize": "^4.28.20",
     "@types/uuid": "^10.0.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "mysql2": "^3.14.2",
     "sequelize": "^6.37.7",
     "uuid": "^11.1.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }
