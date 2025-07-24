@@ -1,13 +1,11 @@
-import { IQueryHandler } from '~/share/interface'
-import { UserLoginDTO } from '../interfaces/dtos/dto'
+import { IJwtService, IQueryHandler } from '~/share/interface'
 import { IUserRepository, LoginResponse, LoginUserQuery } from '../interfaces'
 import {
   InvalidCredentialsError,
   UserNotFoundError,
 } from '../domain/errors/user-errors'
-import { IJwtService, IPasswordHashService } from '../domain/services/index'
-
-
+import { IPasswordHashService } from '../domain/services/index'
+import { config } from '~/share/component/config'
 
 export class LoginUserQueryHandler
   implements IQueryHandler<LoginUserQuery, LoginResponse>
@@ -30,19 +28,27 @@ export class LoginUserQueryHandler
       query.dto.password,
       user.password
     )
+
     if (!isPasswordValid) {
       throw new InvalidCredentialsError()
     }
 
     // 3. Generate JWT token
-    const token = this.jwtService.generateToken({
+    const accessToken = this.jwtService.generateToken({
       userId: user.id,
       username: user.username,
-    })
+    }, config.jwt.accessTokenSecretKey, config.jwt.accessTokenExpiresIn)
 
-    // 4. Return response (không return password)
+
+
+    const refreshToken = this.jwtService.generateToken({
+      userId: user.id,
+      username: user.username,
+    }, config.jwt.refreshTokenSecretKey, config.jwt.refreshTokenExpiresIn)
+
     return {
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         username: user.username,

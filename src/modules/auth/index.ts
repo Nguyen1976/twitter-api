@@ -1,13 +1,13 @@
 import { Sequelize } from 'sequelize'
 import { init } from './infra/sequelize'
-import { UserController } from './interfaces/controllers'
+import { AuthController } from './interfaces/controllers'
 import { CreateNewUserCmdHandler } from './use-cases/register'
 import { MySQLUserRepository } from './infra/repositories/mysql-user-repo'
 import { Router } from 'express'
 import { BcryptPasswordHashService } from './infra/services/bcrypt.service'
 import { LoginUserQueryHandler } from './use-cases/login'
-import { JwtService } from './infra/services/jwt.service'
-import { VerifyTokenQueryHandler } from './use-cases/verify-token'
+import { JwtService } from '~/share/component/jwt'
+import { RefreshTokenCmdHandler } from './use-cases/refreshToken'
 
 export const setupAuth = (sequelize: Sequelize) => {
   init(sequelize)
@@ -28,21 +28,24 @@ export const setupAuth = (sequelize: Sequelize) => {
     jwtService
   )
 
-  const verifyTokenUsecase = new VerifyTokenQueryHandler(repository, jwtService)
+  const refreshTokenCmdHandler = new RefreshTokenCmdHandler(
+    jwtService,
+    repository
+  )
 
-  const userController = new UserController(
+  const authController = new AuthController(
     userUsecase,
     userLoginUsecase,
-    verifyTokenUsecase
+    refreshTokenCmdHandler
   )
 
   const router = Router()
 
-  router.post('/users/register', userController.createAPI.bind(userController))
-  router.post('/users/login', userController.loginAPI.bind(userController))
-  router.get(
-    '/users/verify-token',
-    userController.verifyTokenAPI.bind(userController)
+  router.post('/users/register', authController.createAPI.bind(authController))
+  router.post('/users/login', authController.loginAPI.bind(authController))
+  router.post(
+    '/users/refresh-token',
+    authController.refreshTokenAPI.bind(authController)
   )
 
   return router

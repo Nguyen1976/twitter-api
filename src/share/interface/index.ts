@@ -1,4 +1,6 @@
-export interface IRepository<Entity, Cond, UpdateDTO> extends IQueryRepository<Entity, Cond>, ICommandRepository<Entity, UpdateDTO> {}
+export interface IRepository<Entity, Cond, UpdateDTO>
+  extends IQueryRepository<Entity, Cond>,
+    ICommandRepository<Entity, UpdateDTO> {}
 
 export interface IQueryRepository<Entity, Cond> {
   get(id: string): Promise<Entity | null>
@@ -17,4 +19,18 @@ export interface ICommandHandler<Cmd, Result> {
 
 export interface IQueryHandler<Query, Result> {
   query(query: Query): Promise<Result>
+}
+
+export interface IJwtService {
+  generateToken(
+    payload: TokenPayload,
+    secret: string,
+    expiresIn: string | number
+  ): string
+  verifyToken(token: string, secret: string): TokenPayload | null
+}
+
+export interface TokenPayload {
+  userId: string
+  username: string
 }

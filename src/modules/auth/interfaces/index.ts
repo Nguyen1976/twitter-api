@@ -5,11 +5,16 @@ import {
   UserLoginDTO,
   UserUpdateDTO,
 } from './dtos/dto'
-import { User } from '../domain/entities/user'
 
-// export interface IUserUseCase {
-//   create(data: UserCreateDTO): Promise<string>
-// }
+export interface User {
+  id: string
+  username: string
+  email: string
+  password: string
+  isVerified: boolean
+  createdAt: Date
+  updatedAt: Date
+}
 
 export interface IUserRepository
   extends IRepository<User, UserCondDTO, UserUpdateDTO> {
@@ -25,23 +30,15 @@ export interface LoginUserQuery {
   dto: UserLoginDTO
 }
 
-export interface UpdateCommand {
-  id: string
-  dto: UserUpdateDTO
-}
-
 export interface LoginResponse {
-  token: string
+  accessToken: string
+  refreshToken: string
   user: {
     id: string
     username: string
     email: string
     isVerified: boolean
   }
-}
-
-export interface VerifyTokenQuery {
-  dto: { token: string }
 }
 
 export interface VerifyTokenResponse {
