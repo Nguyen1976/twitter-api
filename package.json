@@ -13,11 +13,13 @@
   "description": "",
   "dependencies": {
     "@types/dotenv": "^6.1.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/sequelize": "^4.28.20",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.2",
     "sequelize": "^6.37.7",
     "uuid": "^11.1.0",
