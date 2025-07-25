@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import { config } from 'dotenv'
 import { setupAuth } from './modules/auth'
 import { sequelize } from './share/component/sequelize'
+import { errorHandlingMiddleware } from './share/middleware/errorHandling'
 
 config()
 ;(async () => {
@@ -9,9 +10,10 @@ config()
     await sequelize.authenticate()
     console.log('Database connected')
 
-    await sequelize.sync({ alter: true }) 
+    await sequelize.sync({ alter: true })
 
     const app = express()
+
     app.use(express.json())
 
     app.get('/check-health', (req: Request, res: Response) => {
@@ -19,6 +21,8 @@ config()
     })
 
     app.use('/v1', setupAuth(sequelize))
+
+    app.use(errorHandlingMiddleware)
 
     app.listen(3000, () => {
       console.log('Server is running on port 3000')

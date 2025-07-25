@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import { IJwtService } from '../interface'
 import { config } from '~/share/component/config'
 import { InvalidTokenError } from '../errors'
+import th from 'zod/v4/locales/th.cjs'
+import ApiError from '../component/ApiError'
+import { StatusCodes } from 'http-status-codes'
 
 export interface AuthRequest extends Request {
   user?: {
@@ -21,7 +24,7 @@ export class AuthMiddleware {
     try {
       const token = this.extractToken(req)
       if (!token) {
-        res.status(401).json({ success: false, message: 'Token required' })
+        next(new ApiError(StatusCodes.UNAUTHORIZED, 'Access token is required'))
         return
       }
 
@@ -29,10 +32,13 @@ export class AuthMiddleware {
         token,
         config.jwt.accessTokenSecretKey
       )
-      if (!payload) {
-        res
-          .status(401)
-          .json(new InvalidTokenError().message)
+      if (!payload) {//lỗi 401 nếu access token k hợp lệ
+        next(
+          new ApiError(
+            StatusCodes.UNAUTHORIZED,
+            new InvalidTokenError().message
+          )
+        )
         return
       }
 
@@ -43,7 +49,7 @@ export class AuthMiddleware {
 
       next()
     } catch (error) {
-      res.status(401).json({ success: false, message: 'Authentication failed' })
+      next(new ApiError(StatusCodes.UNAUTHORIZED, new InvalidTokenError().message))
     }
   }
 

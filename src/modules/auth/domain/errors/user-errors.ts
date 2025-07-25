@@ -19,3 +19,18 @@ export class UserNotFoundError extends Error {
         this.name = 'UserNotFoundError'
     }
 }
+
+
+export class RefreshTokenExpiredError extends Error {
+    constructor(message: string = 'Refresh token has expired') {
+        super(message)
+        this.name = 'RefreshTokenExpiredError'
+    }
+}
+
+export class RefreshTokenInvalidError extends Error {
+    constructor(message: string = 'Invalid refresh token') {
+        super(message)
+        this.name = 'RefreshTokenInvalidError'
+    }
+}

@@ -1,10 +1,12 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { CreateCommand, LoginResponse, LoginUserQuery, VerifyTokenResponse } from '..'
 import {
   UserCreateDTOSchema,
   UserLoginDTOSchema,
 } from '../dtos/dto'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
+import { StatusCodes } from 'http-status-codes'
+import ApiError from '~/share/component/ApiError'
 
 export class AuthController {
   constructor(
@@ -13,33 +15,29 @@ export class AuthController {
       LoginUserQuery,
       LoginResponse
     >,
-    private readonly verifyTokenQueryHandler: ICommandHandler<string, string>
+    private readonly refreshTokenCmdHandler: ICommandHandler<string, string>
   ) {}
 
-  async createAPI(req: Request, res: Response): Promise<void> {
+  async createAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { success, data, error } = UserCreateDTOSchema.safeParse(req.body)
       if (!success) {
-        res.status(400).json({ error: error })
+        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
       const result = await this.createCmdHandler.execute({ dto: data })
-      console.log("🚀 ~ index.ts:27 ~ result:", result)
       res.status(201).json({ data: result })
-      console.log("🚀 ~ index.ts:28 ~ result:", result)
     } catch (error) {
-      res.status(400).json({
-        message: (error as Error).message,
-      })
+      next(error)
     }
   }
 
-  async loginAPI(req: Request, res: Response): Promise<void> {
+  async loginAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { success, data, error } = UserLoginDTOSchema.safeParse(req.body)
       if (!success) {
-        res.status(400).json({ error: error })
-        return 
+        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
+        return
       }
       const query: LoginUserQuery = { dto: data }
       const result = await this.loginQueryHandler.query(query as any)
@@ -50,28 +48,22 @@ export class AuthController {
       })
 
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: (error as Error).message,
-      })
+      next(error)
     }
   }
 
-  async refreshTokenAPI(req: Request, res: Response): Promise<void> {
+  async refreshTokenAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const refreshToken = req.body.refreshToken
       if (!refreshToken) {
-        res.status(400).json({ message: 'Refresh token is required' })
+        next(new ApiError(StatusCodes.FORBIDDEN, 'Refresh token is required or expired'))//Lỗi 403 cho refresh token hết hạn
         return
       }
 
-      const newAccessToken = await this.verifyTokenQueryHandler.execute(refreshToken)
+      const newAccessToken = await this.refreshTokenCmdHandler.execute(refreshToken)
       res.status(200).json({ accessToken: newAccessToken })
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: (error as Error).message,
-      })
+    } catch (error: any) {
+        next(new ApiError(StatusCodes.FORBIDDEN, error.message))
     }
   }
 }

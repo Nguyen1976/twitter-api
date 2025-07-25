@@ -34,3 +34,8 @@ export interface TokenPayload {
   userId: string
   username: string
 }
+
+
+export interface IApiError extends Error {
+  statusCode: number
+}
