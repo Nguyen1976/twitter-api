@@ -14,7 +14,6 @@ export class RefreshTokenCmdHandler implements ICommandHandler<string, string> {
   ) {}
 
   async execute(refreshToken: string): Promise<string> {
-    // 1. Verify the refresh token
     const decoded = this.jwtService.verifyToken(
       refreshToken,
       config.jwt.refreshTokenSecretKey
@@ -23,17 +22,14 @@ export class RefreshTokenCmdHandler implements ICommandHandler<string, string> {
       throw new RefreshTokenInvalidError()
     }
     if (this.isTokenExpired(decoded)) {
-      // ✅ Throw expired error cố định
       throw new RefreshTokenExpiredError()
     }
 
-    // 2. Check if the user exists
     const user = await this.userRepository.findByCond({ id: decoded.userId })
     if (!user) {
       throw new UserNotFoundError()
     }
 
-    // 3. Generate a new access token
     const newAccessToken = this.jwtService.generateToken(
       {
         userId: user.id,

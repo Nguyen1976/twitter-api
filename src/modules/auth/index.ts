@@ -8,6 +8,8 @@ import { BcryptPasswordHashService } from './infra/services/bcrypt.service'
 import { LoginUserQueryHandler } from './use-cases/login'
 import { JwtService } from '~/share/component/jwt'
 import { RefreshTokenCmdHandler } from './use-cases/refreshToken'
+import { CheckEmailQueryHandler } from './use-cases/checkEmail'
+import { CheckUsernameQueryHandler } from './use-cases/checkUsername'
 
 export const setupAuth = (sequelize: Sequelize) => {
   init(sequelize)
@@ -33,10 +35,16 @@ export const setupAuth = (sequelize: Sequelize) => {
     repository
   )
 
+  const checkEmailQueryHandler = new CheckEmailQueryHandler(repository)
+
+  const checkUsernameQueryHandler = new CheckUsernameQueryHandler(repository)
+
   const authController = new AuthController(
     userUsecase,
     userLoginUsecase,
-    refreshTokenCmdHandler
+    refreshTokenCmdHandler,
+    checkEmailQueryHandler,
+    checkUsernameQueryHandler
   )
 
   const router = Router()
@@ -47,6 +55,21 @@ export const setupAuth = (sequelize: Sequelize) => {
     '/users/refresh-token',
     authController.refreshTokenAPI.bind(authController)
   )
+  router.post('/users/check-email', authController.checkEmailAPI.bind(authController))
+  router.post('/users/check-username', authController.checkUsernameAPI.bind(authController)) // Assuming this is similar to check email
+  //checkmail
+  //checkusername
+  //create otp
+  //verify otp
+
+
+  //User tạo tài khoản gồm username, email và ngày tháng năm sinh
+  //và sẽ check username có trùng lặp không, nếu trùng lặp thì sẽ báo lỗi
+  //khi email không trùng lặp thì sẽ sang bước otp và tạo 1 otp mới và gửi mail
+  //Người dùng verified otp thành công thì sẽ nhập mật khẩu và tạo tài khoản 
+  
+  //khi register thành công sẽ cho user đăng nhập luôn tức là trả về token và thông tin user luôn gồm username 
+
 
   return router
 }

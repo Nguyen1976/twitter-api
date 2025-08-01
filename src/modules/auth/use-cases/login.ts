@@ -18,7 +18,9 @@ export class LoginUserQueryHandler
 
   async query(query: LoginUserQuery): Promise<LoginResponse> {
     // 1. Tìm user theo username
-    const user = await this.repository.findByUsername(query.dto.username)
+    const user = await this.repository.findByCond({
+      username: query.dto.username
+    })
     if (!user) {
       throw new UserNotFoundError()
     }

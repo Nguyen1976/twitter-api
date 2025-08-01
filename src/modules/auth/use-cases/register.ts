@@ -14,14 +14,14 @@ export class CreateNewUserCmdHandler
   ) {}
 
   async execute(command: CreateCommand): Promise<string> {
-    const isExist = await this.repository.isUsernameOrEmailTaken(
-      command.dto.username,
-      command.dto.email
-    )
+    const isExist = await this.repository.findByCond({
+      username: command.dto.username,
+      email: command.dto.email
+    })
     if (isExist) {
       throw new UserAlreadyExistsError()
     }
-
+    
     const newId = v7()
 
     const hashedPassword = await this.passwordHashService.hash(

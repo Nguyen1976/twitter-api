@@ -1,5 +1,7 @@
 import { IRepository } from '~/share/interface'
 import {
+  CheckEmailDTO,
+  CheckUsernameDTO,
   UserCondDTO,
   UserCreateDTO,
   UserLoginDTO,
@@ -17,17 +19,21 @@ export interface User {
 }
 
 export interface IUserRepository
-  extends IRepository<User, UserCondDTO, UserUpdateDTO> {
-  isUsernameOrEmailTaken(username: string, email: string): Promise<boolean>
-  findByUsername(username: string): Promise<User | null>
-}
+  extends IRepository<User, UserCondDTO, UserUpdateDTO> {}
 
 export interface CreateCommand {
   dto: UserCreateDTO
 }
-
 export interface LoginUserQuery {
   dto: UserLoginDTO
+}
+
+export interface CheckEmailQuery {
+  dto: CheckEmailDTO
+}
+
+export interface CheckUsernameQuery {
+  dto: CheckUsernameDTO
 }
 
 export interface LoginResponse {
