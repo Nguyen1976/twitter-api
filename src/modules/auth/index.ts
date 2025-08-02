@@ -14,18 +14,21 @@ import Redis from 'ioredis'
 import { RedisUserRepository } from './infra/repositories/redis-user-repo'
 import { EmailService } from '~/share/component/EmailService'
 import { SendVerificationOtpCmdHandler } from './use-cases/sendVerificationOtp'
-import { OtpService } from '~/share/component/OtpService'
+import { OtpService } from '~/share/component/otpService'
+import { createOtpQueueService } from '~/share/component/queue/otp-queue'
 
 export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   init(sequelize)
 
   const repository = new MySQLUserRepository(sequelize)
-  const redisRepository = new RedisUserRepository(redis)
+  const redisRepository = new RedisUserRepository(redis)//đã được sử dụng trong otp cho việc lưu otp
   
   const passwordHashService = new BcryptPasswordHashService()
   const jwtService = new JwtService()
   const emailService = new EmailService()
   const otpService = new OtpService(redis)
+
+  const otpQueueService = createOtpQueueService(redis, otpService, emailService)
 
   const userUsecase = new CreateNewUserCmdHandler(
     repository,
@@ -49,9 +52,8 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   const checkUsernameQueryHandler = new CheckUsernameQueryHandler(repository)
 
   const sendVerificationOtpCmdHandler = new SendVerificationOtpCmdHandler(
-    otpService,
-    emailService,
-    repository
+    repository,
+    otpQueueService
   )
 
   const authController = new AuthController(

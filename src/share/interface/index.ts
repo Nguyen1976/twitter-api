@@ -35,11 +35,9 @@ export interface TokenPayload {
   username: string
 }
 
-
 export interface IApiError extends Error {
   statusCode: number
 }
-
 
 export interface IRedisRepository {
   get(key: string): Promise<string | null>
@@ -48,7 +46,12 @@ export interface IRedisRepository {
 }
 
 export interface IEmailService {
-  sendEmail(to: string, subject: string, text: string, html?: string): Promise<boolean>
+  sendEmail(
+    to: string,
+    subject: string,
+    text: string,
+    html?: string
+  ): Promise<boolean>
   sendOtpEmail(email: string, otp: string): Promise<boolean>
   sendWelcomeEmail(email: string, username: string): Promise<boolean>
   sendPasswordResetEmail(email: string, resetLink: string): Promise<boolean>
@@ -57,4 +60,21 @@ export interface IEmailService {
 export interface IOtpService {
   generate(email: string): Promise<{ otp: string; createdAt: number }>
   validate(email: string, inputOtp: string): Promise<boolean>
+}
+
+export interface IOtpJobData {
+  email: string
+  username: string
+}
+
+export interface IOtpQueueService {
+  sendOtpEmail(email: string, username: string): Promise<void>
+  getStats(): Promise<{
+    waiting: number
+    active: number
+    completed: number
+    failed: number
+    total: number
+  }>
+  close(): Promise<void>
 }

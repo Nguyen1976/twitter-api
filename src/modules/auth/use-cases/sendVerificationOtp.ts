@@ -1,43 +1,48 @@
-import { ICommandHandler, IEmailService, IOtpService } from '~/share/interface'
-import { IUserRepository, SendVerificationOtpCommand, SendVerificationOtpResponse } from '../interfaces'
+import {
+  ICommandHandler,
+  IEmailService,
+  IOtpQueueService,
+  IOtpService,
+} from '~/share/interface'
+import {
+  IUserRepository,
+  SendVerificationOtpCommand,
+  SendVerificationOtpResponse,
+} from '../interfaces'
 import { UserAlreadyExistsError } from '../domain/errors/user-errors'
-
 // ✅ Send Verification OTP Use Case
-export class SendVerificationOtpCmdHandler implements ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse> {
+export class SendVerificationOtpCmdHandler
+  implements
+    ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse>
+{
   constructor(
-    private readonly otpService: IOtpService,
-    private readonly emailService: IEmailService,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
+    private readonly otpQueueService: IOtpQueueService
   ) {}
 
-  async execute(command: SendVerificationOtpCommand): Promise<SendVerificationOtpResponse> {
+  async execute(
+    command: SendVerificationOtpCommand
+  ): Promise<SendVerificationOtpResponse> {
     // 1. Check if email/username already exists
     const existingUser = await this.userRepository.findByCond({
       username: command.dto.username,
-      email: command.dto.email
+      email: command.dto.email,
     })
 
     if (existingUser) {
       throw new UserAlreadyExistsError('Username hoặc email đã được sử dụng')
     }
 
-    // 2. Generate OTP
-    const { otp, createdAt } = await this.otpService.generate(command.dto.email)
-
-
-    // 3. Send OTP email
-    const emailSent = await this.emailService.sendOtpEmail(command.dto.email, otp)
-
-    if (!emailSent) {
-      // Remove OTP if email failed
-      await this.otpService.validate(command.dto.email, otp)//nếu email gửi k thành công thì validate tức là tự xóa otp
-      throw new Error('Không thể gửi email xác thực. Vui lòng thử lại.')
-    }
+    await this.otpQueueService.sendOtpEmail(
+      command.dto.email,
+      command.dto.username
+    )
 
     return {
-      message: 'Mã OTP đã được gửi đến email của bạn',
+      message:
+        'Mã OTP đang được xử lý và sẽ được gửi đến email của bạn trong giây lát',
       expiresIn: 60,
-      createdAt
+      createdAt: new Date().getTime(),
     }
   }
 }
