@@ -13,6 +13,8 @@ import { CheckUsernameQueryHandler } from './use-cases/checkUsername'
 import Redis from 'ioredis'
 import { RedisUserRepository } from './infra/repositories/redis-user-repo'
 import { EmailService } from '~/share/component/EmailService'
+import { SendVerificationOtpCmdHandler } from './use-cases/sendVerificationOtp'
+import { OtpService } from '~/share/component/OtpService'
 
 export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   init(sequelize)
@@ -23,6 +25,7 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   const passwordHashService = new BcryptPasswordHashService()
   const jwtService = new JwtService()
   const emailService = new EmailService()
+  const otpService = new OtpService(redis)
 
   const userUsecase = new CreateNewUserCmdHandler(
     repository,
@@ -45,12 +48,19 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
 
   const checkUsernameQueryHandler = new CheckUsernameQueryHandler(repository)
 
+  const sendVerificationOtpCmdHandler = new SendVerificationOtpCmdHandler(
+    otpService,
+    emailService,
+    repository
+  )
+
   const authController = new AuthController(
     userUsecase,
     userLoginUsecase,
     refreshTokenCmdHandler,
     checkEmailQueryHandler,
-    checkUsernameQueryHandler
+    checkUsernameQueryHandler,
+    sendVerificationOtpCmdHandler
   )
 
   const router = Router()

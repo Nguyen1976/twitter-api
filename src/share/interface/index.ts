@@ -53,3 +53,8 @@ export interface IEmailService {
   sendWelcomeEmail(email: string, username: string): Promise<boolean>
   sendPasswordResetEmail(email: string, resetLink: string): Promise<boolean>
 }
+
+export interface IOtpService {
+  generate(email: string): Promise<{ otp: string; createdAt: number }>
+  validate(email: string, inputOtp: string): Promise<boolean>
+}

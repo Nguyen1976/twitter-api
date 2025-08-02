@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { CheckEmailQuery, CheckUsernameQuery, CreateCommand, LoginResponse, LoginUserQuery, VerifyTokenResponse } from '..'
+import { CheckEmailQuery, CheckUsernameQuery, CreateCommand, LoginResponse, LoginUserQuery, SendVerificationOtpCommand, SendVerificationOtpResponse, VerifyTokenResponse } from '..'
 import {
   CheckEmailSchema,
   CheckUsernameSchema,
+  SendVerificationOtpSchema,
   UserCreateDTOSchema,
   UserLoginDTOSchema,
 } from '../dtos/dto'
@@ -20,6 +21,7 @@ export class AuthController {
     private readonly refreshTokenCmdHandler: ICommandHandler<string, string>,
     private readonly checkEmailQueryHandler: IQueryHandler<CheckEmailQuery, boolean>,
     private readonly checkUsernameQueryHandler: IQueryHandler<CheckUsernameQuery, boolean>,
+    private readonly sendVerificationOtpCmdHandler: ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse>
   ) {}
 
   async createAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -112,9 +114,20 @@ export class AuthController {
 
   async sendVerificationAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      
+      const { success, data, error } = SendVerificationOtpSchema.safeParse(req.body)
+      if (!success) {
+        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
+        return
+      }
+
+      const query: SendVerificationOtpCommand = { dto: data }
+      const result = await this.sendVerificationOtpCmdHandler.execute(query)
+
+      res.status(200).json({
+        data: result,
+      })
     } catch (error) {
-      
+      next(error)
     }
   }
 }

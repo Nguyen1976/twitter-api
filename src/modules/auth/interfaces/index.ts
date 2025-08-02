@@ -2,6 +2,7 @@ import { IRedisRepository, IRepository } from '~/share/interface'
 import {
   CheckEmailDTO,
   CheckUsernameDTO,
+  SendVerificationOtpDTO,
   UserCondDTO,
   UserCreateDTO,
   UserLoginDTO,
@@ -38,6 +39,10 @@ export interface CheckUsernameQuery {
   dto: CheckUsernameDTO
 }
 
+export interface SendVerificationOtpCommand {
+  dto: SendVerificationOtpDTO
+}
+
 export interface LoginResponse {
   accessToken: string
   refreshToken: string
@@ -54,4 +59,10 @@ export interface VerifyTokenResponse {
     id: string
     email: string
   }
+}
+
+export interface SendVerificationOtpResponse {
+  message: string
+  expiresIn: number
+  createdAt: number
 }
