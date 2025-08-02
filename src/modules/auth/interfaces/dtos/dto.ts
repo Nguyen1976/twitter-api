@@ -48,4 +48,18 @@ export const CheckEmailSchema = z.object({
 
 export type CheckEmailDTO = z.infer<typeof CheckEmailSchema>
 
+export const SendVerificationOtpSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+  username: z.string().min(3, 'Username phải có ít nhất 3 ký tự').max(20, 'Username không được quá 20 ký tự')
+})
+export type SendVerificationOtpDTO = z.infer<typeof SendVerificationOtpSchema>
+
+// ✅ Schema cho verify OTP  
+export const VerifyOtpSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+  otp: z.string().length(6, 'OTP phải có 6 chữ số').regex(/^\d{6}$/, 'OTP chỉ chứa số')
+})
+
+export type VerifyOtpDTO = z.infer<typeof VerifyOtpSchema>
+
 export type UserCondDTO = {}

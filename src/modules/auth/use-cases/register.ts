@@ -1,7 +1,7 @@
 import { v7 } from 'uuid'
 import { CreateCommand, IUserRepository } from '../interfaces'
 import { User } from '../domain/entities/user'
-import { ICommandHandler } from '~/share/interface'
+import { ICommandHandler, IEmailService } from '~/share/interface'
 import { UserAlreadyExistsError } from '../domain/errors/user-errors'
 import { IPasswordHashService } from '../domain/services/index'
 
@@ -10,7 +10,8 @@ export class CreateNewUserCmdHandler
 {
   constructor(
     private readonly repository: IUserRepository,
-    private readonly passwordHashService: IPasswordHashService
+    private readonly passwordHashService: IPasswordHashService,
+    private readonly emailService: IEmailService
   ) {}
 
   async execute(command: CreateCommand): Promise<string> {
@@ -37,6 +38,13 @@ export class CreateNewUserCmdHandler
     }
 
     await this.repository.insert(newUser)
+
+    this.emailService.sendWelcomeEmail(
+      newUser.email,
+      newUser.username
+    ).catch(err => {
+      console.error('Failed to send welcome email:', err)
+    })
 
     return newId
   }
