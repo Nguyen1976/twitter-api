@@ -35,6 +35,7 @@
     "@types/ioredis": "^4.28.10",
     "@types/node": "^24.1.0",
     "@types/nodemailer": "^6.4.17",
+    "bullmq": "^5.56.9",
     "nodemon": "^3.1.10",
     "otplib": "^12.0.1",
     "ts-node": "^10.9.2",

@@ -12,7 +12,7 @@ class RedisConnection {
         password: config.redis.password,
         enableReadyCheck: false,
         lazyConnect: true,
-        maxRetriesPerRequest: 3,
+        maxRetriesPerRequest: null,
         // Connection pool settings
         family: 4,
         keepAlive: 0, 
