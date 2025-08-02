@@ -1,7 +1,5 @@
-
 import { CheckEmailQuery, IUserRepository } from '../interfaces'
 import { IQueryHandler } from '~/share/interface'
-import { UserAlreadyExistsError } from '../domain/errors/user-errors'
 
 export class CheckEmailQueryHandler
   implements IQueryHandler<CheckEmailQuery, boolean>

@@ -1,4 +1,4 @@
-import { IRepository } from '~/share/interface'
+import { IRedisRepository, IRepository } from '~/share/interface'
 import {
   CheckEmailDTO,
   CheckUsernameDTO,
@@ -20,6 +20,8 @@ export interface User {
 
 export interface IUserRepository
   extends IRepository<User, UserCondDTO, UserUpdateDTO> {}
+
+export interface IUserRedisRepository extends IRedisRepository{}
 
 export interface CreateCommand {
   dto: UserCreateDTO

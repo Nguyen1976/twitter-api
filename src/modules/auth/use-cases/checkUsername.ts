@@ -1,4 +1,3 @@
-
 import { CheckUsernameQuery, IUserRepository } from '../interfaces'
 import { IQueryHandler } from '~/share/interface'
 export class CheckUsernameQueryHandler

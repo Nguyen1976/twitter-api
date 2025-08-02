@@ -109,4 +109,12 @@ export class AuthController {
       next(error)
     }
   }
+
+  async sendVerificationAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
 }

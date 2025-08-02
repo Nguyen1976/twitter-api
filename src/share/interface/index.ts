@@ -39,3 +39,17 @@ export interface TokenPayload {
 export interface IApiError extends Error {
   statusCode: number
 }
+
+
+export interface IRedisRepository {
+  get(key: string): Promise<string | null>
+  set(key: string, value: string, expirationSeconds?: number): Promise<boolean>
+  del(key: string): Promise<boolean>
+}
+
+export interface IEmailService {
+  sendEmail(to: string, subject: string, text: string, html?: string): Promise<boolean>
+  sendOtpEmail(email: string, otp: string): Promise<boolean>
+  sendWelcomeEmail(email: string, username: string): Promise<boolean>
+  sendPasswordResetEmail(email: string, resetLink: string): Promise<boolean>
+}
