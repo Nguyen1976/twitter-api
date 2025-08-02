@@ -10,18 +10,24 @@ import { JwtService } from '~/share/component/jwt'
 import { RefreshTokenCmdHandler } from './use-cases/refreshToken'
 import { CheckEmailQueryHandler } from './use-cases/checkEmail'
 import { CheckUsernameQueryHandler } from './use-cases/checkUsername'
+import Redis from 'ioredis'
+import { RedisUserRepository } from './infra/repositories/redis-user-repo'
+import { EmailService } from '~/share/component/EmailService'
 
-export const setupAuth = (sequelize: Sequelize) => {
+export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   init(sequelize)
 
   const repository = new MySQLUserRepository(sequelize)
+  const redisRepository = new RedisUserRepository(redis)
+  
   const passwordHashService = new BcryptPasswordHashService()
-
   const jwtService = new JwtService()
+  const emailService = new EmailService()
 
   const userUsecase = new CreateNewUserCmdHandler(
     repository,
-    passwordHashService
+    passwordHashService,
+    emailService
   )
 
   const userLoginUsecase = new LoginUserQueryHandler(
@@ -49,14 +55,16 @@ export const setupAuth = (sequelize: Sequelize) => {
 
   const router = Router()
 
-  router.post('/users/register', authController.createAPI.bind(authController))
-  router.post('/users/login', authController.loginAPI.bind(authController))
+  router.post('/auth/register', authController.createAPI.bind(authController))
+  router.post('/auth/login', authController.loginAPI.bind(authController))
   router.post(
-    '/users/refresh-token',
+    '/auth/refresh-token',
     authController.refreshTokenAPI.bind(authController)
   )
-  router.post('/users/check-email', authController.checkEmailAPI.bind(authController))
-  router.post('/users/check-username', authController.checkUsernameAPI.bind(authController)) // Assuming this is similar to check email
+  router.post('/auth/check-email', authController.checkEmailAPI.bind(authController))
+  router.post('/auth/check-username', authController.checkUsernameAPI.bind(authController)) // Assuming this is similar to check email
+  router.post('/auth/send-verification', authController.sendVerificationAPI.bind(authController))
+  // router.post('/auth/verify-otp', authController.verifyOtpAPI.bind(authController))
   //checkmail
   //checkusername
   //create otp

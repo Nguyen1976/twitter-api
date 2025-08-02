@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize'
 import { IRepository } from '../interface'
-import { Op } from 'sequelize'
 
 export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
   implements IRepository<Entity, Cond, UpdateDTO>
