@@ -1,5 +1,6 @@
-import { CheckUsernameQuery, IUserRepository } from '../interfaces'
 import { IQueryHandler } from '~/share/interface'
+import { CheckUsernameQuery } from '../interfaces/userQueries'
+import { IUserRepository } from '../interfaces/userRepository'
 export class CheckUsernameQueryHandler
   implements IQueryHandler<CheckUsernameQuery, boolean>
 {

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { CheckEmailQuery, CheckUsernameQuery, CreateCommand, LoginResponse, LoginUserQuery, SendVerificationOtpCommand, SendVerificationOtpResponse, VerifyTokenResponse } from '..'
 import {
   CheckEmailSchema,
   CheckUsernameSchema,
@@ -10,6 +9,9 @@ import {
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/share/component/ApiError'
+import { CreateCommand, SendVerificationOtpCommand } from '../userCommands'
+import { CheckEmailQuery, CheckUsernameQuery, LoginUserQuery } from '../userQueries'
+import { LoginResponse, SendVerificationOtpResponse } from '../userResponses'
 
 export class AuthController {
   constructor(

@@ -1,5 +1,6 @@
-import { CheckEmailQuery, IUserRepository } from '../interfaces'
 import { IQueryHandler } from '~/share/interface'
+import { CheckEmailQuery } from '../interfaces/userQueries'
+import { IUserRepository } from '../interfaces/userRepository'
 
 export class CheckEmailQueryHandler
   implements IQueryHandler<CheckEmailQuery, boolean>

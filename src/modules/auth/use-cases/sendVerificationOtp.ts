@@ -1,12 +1,11 @@
 import {
   ICommandHandler,
 } from '~/share/interface'
-import {
-  IUserRepository,
-  SendVerificationOtpCommand,
-  SendVerificationOtpResponse,
-} from '../interfaces'
+
 import { UserAlreadyExistsError } from '../domain/errors/user-errors'
+import { SendVerificationOtpCommand } from '../interfaces/userCommands'
+import { SendVerificationOtpResponse } from '../interfaces/userResponses'
+import { IUserRepository } from '../interfaces/userRepository'
 // ✅ Send Verification OTP Use Case
 export class SendVerificationOtpCmdHandler
   implements

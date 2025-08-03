@@ -1,11 +1,11 @@
 import { ICommandHandler, IJwtService } from '~/share/interface'
-import { IUserRepository } from '../interfaces'
 import { config } from '~/share/component/config'
 import {
   RefreshTokenExpiredError,
   RefreshTokenInvalidError,
   UserNotFoundError,
 } from '../domain/errors/user-errors'
+import { IUserRepository } from '../interfaces/userRepository'
 
 export class RefreshTokenCmdHandler implements ICommandHandler<string, string> {
   constructor(
