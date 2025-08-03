@@ -15,7 +15,7 @@ import { RedisUserRepository } from './infra/repositories/redis-user-repo'
 import { EmailService } from '~/share/component/EmailService'
 import { SendVerificationOtpCmdHandler } from './use-cases/sendVerificationOtp'
 import { OtpService } from '~/share/component/otpService'
-import { createOtpQueueService } from '~/share/component/queue/otp-queue'
+import { OtpQueueService } from '~/share/component/queue/otpQueueService'
 
 export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   init(sequelize)
@@ -28,7 +28,7 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   const emailService = new EmailService()
   const otpService = new OtpService(redis)
 
-  const otpQueueService = createOtpQueueService(redis, otpService, emailService)
+  const otpQueueService = new OtpQueueService(redis, otpService, emailService)
 
   const userUsecase = new CreateNewUserCmdHandler(
     repository,

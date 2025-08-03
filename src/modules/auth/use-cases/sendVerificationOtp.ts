@@ -1,8 +1,5 @@
 import {
   ICommandHandler,
-  IEmailService,
-  IOtpQueueService,
-  IOtpService,
 } from '~/share/interface'
 import {
   IUserRepository,
@@ -17,7 +14,7 @@ export class SendVerificationOtpCmdHandler
 {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly otpQueueService: IOtpQueueService
+    private readonly otpQueueService: any
   ) {}
 
   async execute(

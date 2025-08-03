@@ -66,15 +66,3 @@ export interface IOtpJobData {
   email: string
   username: string
 }
-
-export interface IOtpQueueService {
-  sendOtpEmail(email: string, username: string): Promise<void>
-  getStats(): Promise<{
-    waiting: number
-    active: number
-    completed: number
-    failed: number
-    total: number
-  }>
-  close(): Promise<void>
-}
