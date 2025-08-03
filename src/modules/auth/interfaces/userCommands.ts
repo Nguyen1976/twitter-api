@@ -1,4 +1,4 @@
-import { SendVerificationOtpDTO, UserCreateDTO } from "./dtos/dto"
+import { SendVerificationOtpDTO, UserCreateDTO, VerifyOtpDTO } from "./dtos/dto"
 
 
 export interface CreateCommand {
@@ -7,4 +7,8 @@ export interface CreateCommand {
 
 export interface SendVerificationOtpCommand {
   dto: SendVerificationOtpDTO
+}
+
+export interface VerifyOtpCommand {
+  dto: VerifyOtpDTO
 }

@@ -5,11 +5,12 @@ import {
   SendVerificationOtpSchema,
   UserCreateDTOSchema,
   UserLoginDTOSchema,
+  VerifyOtpSchema,
 } from '../dtos/dto'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/share/component/ApiError'
-import { CreateCommand, SendVerificationOtpCommand } from '../userCommands'
+import { CreateCommand, SendVerificationOtpCommand, VerifyOtpCommand } from '../userCommands'
 import { CheckEmailQuery, CheckUsernameQuery, LoginUserQuery } from '../userQueries'
 import { LoginResponse, SendVerificationOtpResponse } from '../userResponses'
 
@@ -23,7 +24,8 @@ export class AuthController {
     private readonly refreshTokenCmdHandler: ICommandHandler<string, string>,
     private readonly checkEmailQueryHandler: IQueryHandler<CheckEmailQuery, boolean>,
     private readonly checkUsernameQueryHandler: IQueryHandler<CheckUsernameQuery, boolean>,
-    private readonly sendVerificationOtpCmdHandler: ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse>
+    private readonly sendVerificationOtpCmdHandler: ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse>,
+    private readonly verifyOtpCmdHandler: ICommandHandler<VerifyOtpCommand, boolean>
   ) {}
 
   async createAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -127,6 +129,28 @@ export class AuthController {
 
       res.status(200).json({
         data: result,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async verifyOtpAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { success, data, error } = VerifyOtpSchema.safeParse(req.body)
+      if (!success) {
+        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
+        return
+      }
+      const command: VerifyOtpCommand = { dto: data }
+      const isValid: boolean = await this.verifyOtpCmdHandler.execute(command)
+      if (!isValid) {
+        next(new ApiError(StatusCodes.FORBIDDEN, 'Invalid OTP'))
+        return
+      }
+
+      res.status(200).json({
+        message: 'OTP verified successfully',
       })
     } catch (error) {
       next(error)
