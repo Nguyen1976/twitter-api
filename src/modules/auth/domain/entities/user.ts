@@ -4,6 +4,7 @@ export interface User {
     email: string
     password: string
     isVerified: boolean
+    birthDate: Date
     createdAt: Date
     updatedAt: Date
 }

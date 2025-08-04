@@ -5,7 +5,7 @@ dotenv.config()
 
 export const config = {
   app: {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 3001,
   },
   jwt: {
     accessTokenSecretKey: process.env.JWT_SECRET || 'default_secret',

@@ -33,9 +33,7 @@ export class CreateNewUserCmdHandler
     const newUser: User = {
       id: newId,
       ...command.dto,
-      password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      password: hashedPassword
     }
 
     await this.repository.insert(newUser)

@@ -10,8 +10,16 @@ import {
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/share/component/ApiError'
-import { CreateCommand, SendVerificationOtpCommand, VerifyOtpCommand } from '../userCommands'
-import { CheckEmailQuery, CheckUsernameQuery, LoginUserQuery } from '../userQueries'
+import {
+  CreateCommand,
+  SendVerificationOtpCommand,
+  VerifyOtpCommand,
+} from '../userCommands'
+import {
+  CheckEmailQuery,
+  CheckUsernameQuery,
+  LoginUserQuery,
+} from '../userQueries'
 import { LoginResponse, SendVerificationOtpResponse } from '../userResponses'
 
 export class AuthController {
@@ -22,13 +30,29 @@ export class AuthController {
       LoginResponse
     >,
     private readonly refreshTokenCmdHandler: ICommandHandler<string, string>,
-    private readonly checkEmailQueryHandler: IQueryHandler<CheckEmailQuery, boolean>,
-    private readonly checkUsernameQueryHandler: IQueryHandler<CheckUsernameQuery, boolean>,
-    private readonly sendVerificationOtpCmdHandler: ICommandHandler<SendVerificationOtpCommand, SendVerificationOtpResponse>,
-    private readonly verifyOtpCmdHandler: ICommandHandler<VerifyOtpCommand, boolean>
+    private readonly checkEmailQueryHandler: IQueryHandler<
+      CheckEmailQuery,
+      boolean
+    >,
+    private readonly checkUsernameQueryHandler: IQueryHandler<
+      CheckUsernameQuery,
+      boolean
+    >,
+    private readonly sendVerificationOtpCmdHandler: ICommandHandler<
+      SendVerificationOtpCommand,
+      SendVerificationOtpResponse
+    >,
+    private readonly verifyOtpCmdHandler: ICommandHandler<
+      VerifyOtpCommand,
+      boolean
+    >
   ) {}
 
-  async createAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { success, data, error } = UserCreateDTOSchema.safeParse(req.body)
       if (!success) {
@@ -42,7 +66,11 @@ export class AuthController {
     }
   }
 
-  async loginAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async loginAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { success, data, error } = UserLoginDTOSchema.safeParse(req.body)
       if (!success) {
@@ -55,48 +83,66 @@ export class AuthController {
       res.status(200).json({
         data: result,
       })
-
     } catch (error) {
       next(error)
     }
   }
 
-  async refreshTokenAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async refreshTokenAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const refreshToken = req.body.refreshToken
       if (!refreshToken) {
-        next(new ApiError(StatusCodes.FORBIDDEN, 'Refresh token is required or expired'))//Lỗi 403 cho refresh token hết hạn
+        next(
+          new ApiError(
+            StatusCodes.FORBIDDEN,
+            'Refresh token is required or expired'
+          )
+        ) //Lỗi 403 cho refresh token hết hạn
         return
       }
 
-      const newAccessToken = await this.refreshTokenCmdHandler.execute(refreshToken)
+      const newAccessToken = await this.refreshTokenCmdHandler.execute(
+        refreshToken
+      )
       res.status(200).json({ accessToken: newAccessToken })
     } catch (error: any) {
-        next(new ApiError(StatusCodes.FORBIDDEN, error.message))
+      next(new ApiError(StatusCodes.FORBIDDEN, error.message))
     }
   }
 
-  async checkEmailAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async checkEmailAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { success, data, error } = CheckEmailSchema.safeParse(req.body)
+
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
-
+      
       const query: CheckEmailQuery = { dto: data }
       const result = await this.checkEmailQueryHandler.query(query)
-
+      
       res.status(200).json({
         data: result,
       })
-
     } catch (error) {
       next(error)
     }
   }
 
-  async checkUsernameAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async checkUsernameAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { success, data, error } = CheckUsernameSchema.safeParse(req.body)
       if (!success) {
@@ -110,15 +156,20 @@ export class AuthController {
       res.status(200).json({
         data: result,
       })
-
     } catch (error) {
       next(error)
     }
   }
 
-  async sendVerificationAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async sendVerificationAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { success, data, error } = SendVerificationOtpSchema.safeParse(req.body)
+      const { success, data, error } = SendVerificationOtpSchema.safeParse(
+        req.body
+      )
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
@@ -135,7 +186,11 @@ export class AuthController {
     }
   }
 
-  async verifyOtpAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async verifyOtpAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { success, data, error } = VerifyOtpSchema.safeParse(req.body)
       if (!success) {

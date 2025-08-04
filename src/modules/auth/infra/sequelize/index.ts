@@ -32,6 +32,10 @@ export function init(sequelize: Sequelize) {
         allowNull: false,
         defaultValue: 'false',
       },
+      birth_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
     },
     {
       sequelize,

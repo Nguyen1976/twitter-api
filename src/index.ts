@@ -1,23 +1,26 @@
 import express, { Request, Response } from 'express'
-import { config } from 'dotenv'
 import { setupAuth } from './modules/auth'
 import { sequelize } from './share/component/sequelize'
 import { errorHandlingMiddleware } from './share/middleware/errorHandling'
 import RedisConnection, { redis } from './share/component/redis'
+import { config } from './share/component/config'
+import cors from 'cors'
 
-config()
+
 ;(async () => {
   try {
     await sequelize.authenticate()
-    console.log('Database connected')
 
     await sequelize.sync({ alter: true })
 
     await RedisConnection.connect()
 
     const app = express()
+    const port = config.app.port || 3001
 
     app.use(express.json())
+
+    app.use(cors())
 
     app.get('/check-health', async (req: Request, res: Response) => {
       try {
@@ -44,14 +47,13 @@ config()
       }
     })
 
-    app.use('/v1', setupAuth(sequelize, redis))
+    app.use('/api/v1', setupAuth(sequelize, redis))
 
     app.use(errorHandlingMiddleware)
 
-    app.listen(3000, () => {
-      console.log('Server is running on port 3000')
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`)
     })
-    
   } catch (err) {
     console.error('Unable to connect to the database:', err)
     process.exit(1)

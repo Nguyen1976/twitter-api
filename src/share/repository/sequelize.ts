@@ -25,6 +25,9 @@ export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
   }
 
   async findByCond(cond: Cond): Promise<Entity | null> {
+    console.log("Available models:", Object.keys(this.sequelize.models));
+
+
     const data = await this.sequelize.models[this.modelName].findOne({
       where: cond as any,
     })
