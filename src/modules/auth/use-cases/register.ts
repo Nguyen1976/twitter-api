@@ -33,6 +33,7 @@ export class CreateNewUserCmdHandler
     const newUser: User = {
       id: newId,
       ...command.dto,
+      birthDate: command.dto.birthDate,
       password: hashedPassword
     }
 

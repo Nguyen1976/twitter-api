@@ -54,14 +54,21 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { success, data, error } = UserCreateDTOSchema.safeParse(req.body)
+      const { success, data, error } = UserCreateDTOSchema.safeParse({
+        ...req.body,
+        birthDate: new Date(req.body.birthDate),
+      })
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
       const result = await this.createCmdHandler.execute({ dto: data })
-      res.status(201).json({ data: result })
+      res.status(201).json({
+        success: true,
+        data: result,
+      })
     } catch (error) {
+      console.error('Error in createAPI:', error)
       next(error)
     }
   }
@@ -126,10 +133,10 @@ export class AuthController {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
-      
+
       const query: CheckEmailQuery = { dto: data }
       const result = await this.checkEmailQueryHandler.query(query)
-      
+
       res.status(200).json({
         data: result,
       })
@@ -199,13 +206,9 @@ export class AuthController {
       }
       const command: VerifyOtpCommand = { dto: data }
       const isValid: boolean = await this.verifyOtpCmdHandler.execute(command)
-      if (!isValid) {
-        next(new ApiError(StatusCodes.FORBIDDEN, 'Invalid OTP'))
-        return
-      }
 
       res.status(200).json({
-        message: 'OTP verified successfully',
+        data: isValid,
       })
     } catch (error) {
       next(error)

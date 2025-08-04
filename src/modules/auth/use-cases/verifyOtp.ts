@@ -18,7 +18,7 @@ export class VerifyOtpCmdHandler
       command.dto.otp
     )
     if (!isValidOtp) {
-      throw new Error('Invalid OTP')
+      return false
     }
 
     return true

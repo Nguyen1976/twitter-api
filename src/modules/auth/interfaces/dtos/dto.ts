@@ -6,6 +6,7 @@ export const UserSchema = z.object({
   email: z.string().email(),
   password: z.string(),
   isVerified: z.boolean().default(false),
+  birthDate: z.date(),
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date().default(() => new Date()),
 })

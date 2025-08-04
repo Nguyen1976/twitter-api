@@ -27,14 +27,16 @@ export function init(sequelize: Sequelize) {
         allowNull: false,
       },
 
-      is_verified: {
+      isVerified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: 'false',
+        field: 'is_verified'
       },
-      birth_date: {
+      birthDate: {
         type: DataTypes.DATE,
         allowNull: false,
+        field: 'birth_date'
       },
     },
     {
