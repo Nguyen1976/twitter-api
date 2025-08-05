@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { IApiError } from '../interface'
+import { success } from 'zod'
 
 export const errorHandlingMiddleware = (
   err: IApiError,
@@ -16,6 +17,7 @@ export const errorHandlingMiddleware = (
     statusCode: err.statusCode,
     message: err.message || StatusCodes[err.statusCode], // Nếu lỗi mà không có message thì lấy ReasonPhrases chuẩn theo mã Status Code
     stack: err.stack,
+    success: false,
   }
 
   res.status(responseError.statusCode).json(responseError)

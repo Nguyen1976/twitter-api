@@ -88,6 +88,7 @@ export class AuthController {
       const result = await this.loginQueryHandler.query(query as any)
 
       res.status(200).json({
+        success: true,
         data: result,
       })
     } catch (error) {
@@ -115,7 +116,7 @@ export class AuthController {
       const newAccessToken = await this.refreshTokenCmdHandler.execute(
         refreshToken
       )
-      res.status(200).json({ accessToken: newAccessToken })
+      res.status(200).json({ success: true, data: newAccessToken })
     } catch (error: any) {
       next(new ApiError(StatusCodes.FORBIDDEN, error.message))
     }
@@ -138,6 +139,7 @@ export class AuthController {
       const result = await this.checkEmailQueryHandler.query(query)
 
       res.status(200).json({
+        success: true,
         data: result,
       })
     } catch (error) {
@@ -161,6 +163,7 @@ export class AuthController {
       const result = await this.checkUsernameQueryHandler.query(query)
 
       res.status(200).json({
+        success: true,
         data: result,
       })
     } catch (error) {
@@ -186,6 +189,7 @@ export class AuthController {
       const result = await this.sendVerificationOtpCmdHandler.execute(query)
 
       res.status(200).json({
+        success: true,
         data: result,
       })
     } catch (error) {
@@ -208,6 +212,7 @@ export class AuthController {
       const isValid: boolean = await this.verifyOtpCmdHandler.execute(command)
 
       res.status(200).json({
+        success: true,
         data: isValid,
       })
     } catch (error) {
