@@ -19,35 +19,35 @@ export class LoginUserQueryHandler
   ) {}
 
   async query(query: LoginUserQuery): Promise<LoginResponse> {
-    // 1. Tìm user theo username
+    // 1. Tìm user theo email
     const user = await this.repository.findByCond({
-      username: query.dto.username
+      email: query.dto.email
     })
     if (!user) {
       throw new UserNotFoundError()
     }
-
+    
     // 2. Verify password
     const isPasswordValid = await this.passwordHashService.compare(
       query.dto.password,
       user.password
     )
-
+    
     if (!isPasswordValid) {
       throw new InvalidCredentialsError()
     }
 
     // 3. Generate JWT token
     const accessToken = this.jwtService.generateToken({
-      userId: user.id,
-      username: user.username,
+      id: user.id,
+      email: user.email,
     }, config.jwt.accessTokenSecretKey, config.jwt.accessTokenExpiresIn)
 
 
 
     const refreshToken = this.jwtService.generateToken({
-      userId: user.id,
-      username: user.username,
+      id: user.id,
+      email: user.email,
     }, config.jwt.refreshTokenSecretKey, config.jwt.refreshTokenExpiresIn)
 
     return {

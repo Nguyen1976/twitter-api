@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { IApiError } from '../interface'
-import { success } from 'zod'
+import ApiError from '../component/ApiError';
+import { mapDomainErrorToApiError } from '../errors';
 
 export const errorHandlingMiddleware = (
   err: IApiError,
@@ -9,16 +10,14 @@ export const errorHandlingMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  if (!err.statusCode) {
-    err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR
+  
+
+  const apiError = err instanceof ApiError ? err : mapDomainErrorToApiError(err);
+  const response = {
+    name: apiError.name,
+    message: apiError.message,
+    statusCode: apiError.statusCode,
   }
 
-  const responseError = {
-    statusCode: err.statusCode,
-    message: err.message || StatusCodes[err.statusCode], // Nếu lỗi mà không có message thì lấy ReasonPhrases chuẩn theo mã Status Code
-    stack: err.stack,
-    success: false,
-  }
-
-  res.status(responseError.statusCode).json(responseError)
+  res.status(response.statusCode).json(response)
 }

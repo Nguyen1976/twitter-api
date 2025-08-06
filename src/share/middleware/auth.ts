@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes'
 export interface AuthRequest extends Request {
   user?: {
     id: string
-    username: string
+    email: string
   }
 }
 
@@ -43,8 +43,8 @@ export class AuthMiddleware {
       }
 
       req.user = {
-        id: payload.userId,
-        username: payload.username,
+        id: payload.id,
+        email: payload.email
       }
 
       next()

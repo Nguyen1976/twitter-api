@@ -25,15 +25,15 @@ export class RefreshTokenCmdHandler implements ICommandHandler<string, string> {
       throw new RefreshTokenExpiredError()
     }
 
-    const user = await this.userRepository.findByCond({ id: decoded.userId })
+    const user = await this.userRepository.findByCond({ id: decoded.id })
     if (!user) {
       throw new UserNotFoundError()
     }
 
     const newAccessToken = this.jwtService.generateToken(
       {
-        userId: user.id,
-        username: user.username,
+        id: user.id,
+        email: user.email,
       },
       config.jwt.accessTokenSecretKey,
       config.jwt.accessTokenExpiresIn

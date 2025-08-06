@@ -31,8 +31,8 @@ export interface IJwtService {
 }
 
 export interface TokenPayload {
-  userId: string
-  username: string
+  id: string
+  email: string
 }
 
 export interface IApiError extends Error {

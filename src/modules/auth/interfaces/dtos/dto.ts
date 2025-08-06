@@ -34,7 +34,7 @@ export const UserUpdateDTOSchema = z.object({
 export type UserUpdateDTO = z.infer<typeof UserUpdateDTOSchema>
 
 export const UserLoginDTOSchema = z.object({
-  username: z.string().min(7).max(50),
+  email: z.string().email('Email không hợp lệ'),
   password: z.string(),
 })
 
