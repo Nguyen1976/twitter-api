@@ -7,7 +7,8 @@ import { config } from './share/component/config'
 import cors from 'cors'
 
 
-;(async () => {
+;import { setupUserProfile } from './modules/user'
+(async () => {
   try {
     await sequelize.authenticate()
 
@@ -47,7 +48,8 @@ import cors from 'cors'
       }
     })
 
-    app.use('/api/v1', setupAuth(sequelize, redis))
+    app.use('/api/v1/auth', setupAuth(sequelize, redis))
+    app.use('/api/v1/user', setupUserProfile(sequelize))
 
     app.use(errorHandlingMiddleware)
 
