@@ -71,28 +71,22 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
 
   const router = Router()
 
-  router.post('/auth/register', authController.createAPI.bind(authController))
-  router.post('/auth/login', authController.loginAPI.bind(authController))
+  router.post('/register', authController.createAPI.bind(authController))
+  router.post('/login', authController.loginAPI.bind(authController))
   router.post(
-    '/auth/refresh-token',
+    '/refresh-token',
     authController.refreshTokenAPI.bind(authController)
   )
+  router.post('/check-email', authController.checkEmailAPI.bind(authController))
   router.post(
-    '/auth/check-email',
-    authController.checkEmailAPI.bind(authController)
-  )
-  router.post(
-    '/auth/check-username',
+    '/check-username',
     authController.checkUsernameAPI.bind(authController)
   ) // Assuming this is similar to check email
   router.post(
-    '/auth/send-verification',
+    '/send-verification',
     authController.sendVerificationAPI.bind(authController)
   )
-  router.post(
-    '/auth/verify-otp',
-    authController.verifyOtpAPI.bind(authController)
-  )
+  router.post('/verify-otp', authController.verifyOtpAPI.bind(authController))
   //quy trình verified nhận vào otp và email username, check redis xem có otp không, nếu có thì so sánh với otp người dùng nhập vào
 
   //User tạo tài khoản gồm username, email và ngày tháng năm sinh
