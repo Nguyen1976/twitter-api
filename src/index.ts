@@ -7,7 +7,7 @@ import { config } from './share/component/config'
 import cors from 'cors'
 
 
-;import { setupUserProfile, setupUserProfileGrpc } from './modules/user'
+;import { setupUserProfile } from './modules/user'
 (async () => {
   try {
     await sequelize.authenticate()
@@ -22,8 +22,6 @@ import cors from 'cors'
     app.use(express.json())
     app.use(cors())
 
-    const userProfileGrpcServer = await setupUserProfileGrpc(sequelize)
-    await userProfileGrpcServer.start(50051)
 
     app.get('/check-health', async (req: Request, res: Response) => {
       try {
