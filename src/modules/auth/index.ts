@@ -17,6 +17,7 @@ import { SendVerificationOtpCmdHandler } from './use-cases/sendVerificationOtp'
 import { OtpService } from '~/share/component/otpService'
 import { OtpQueueService } from '~/share/component/queue/otpQueueService'
 import { VerifyOtpCmdHandler } from './use-cases/verifyOtp'
+import { UserProfileGrpcClient } from './infra/grpc/client'
 
 export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
   init(sequelize)
@@ -31,10 +32,13 @@ export const setupAuth = (sequelize: Sequelize, redis: Redis) => {
 
   const otpQueueService = new OtpQueueService(redis, otpService, emailService)
 
+  const userProfileGrpcClient = new UserProfileGrpcClient()
+
   const userUsecase = new CreateNewUserCmdHandler(
     repository,
     passwordHashService,
-    emailService
+    emailService,
+    userProfileGrpcClient
   )
 
   const userLoginUsecase = new LoginUserQueryHandler(

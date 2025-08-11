@@ -5,6 +5,7 @@ import { UserAlreadyExistsError } from '../domain/errors/user-errors'
 import { IPasswordHashService } from '../domain/services/index'
 import { CreateCommand } from '../interfaces/userCommands'
 import { IUserRepository } from '../interfaces/userRepository'
+import { IUserProfileService } from '~/share/interface/grpc'
 
 export class CreateNewUserCmdHandler
   implements ICommandHandler<CreateCommand, string>
@@ -12,7 +13,8 @@ export class CreateNewUserCmdHandler
   constructor(
     private readonly repository: IUserRepository,
     private readonly passwordHashService: IPasswordHashService,
-    private readonly emailService: IEmailService
+    private readonly emailService: IEmailService,
+    private readonly userProfileGrpcClient: IUserProfileService
   ) {}
 
   async execute(command: CreateCommand): Promise<string> {
@@ -38,6 +40,12 @@ export class CreateNewUserCmdHandler
     }
 
     await this.repository.insert(newUser)
+
+    await this.userProfileGrpcClient.CreateUserProfile({
+      userId: newUser.id
+    }).catch(err => {
+      console.error('Failed to create user profile:', err)
+    })
 
     this.emailService.sendWelcomeEmail(
       newUser.email,

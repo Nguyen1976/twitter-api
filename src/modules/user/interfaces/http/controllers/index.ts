@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { CreateCommand } from '../userProfileCommands'
+import { CreateCommand } from '../../userProfileCommands'
 import { ICommandHandler } from '~/share/interface'
 import ApiError from '~/share/component/ApiError'
-import { UserProfileCreateDTOSchema } from '../dtos'
+import { UserProfileCreateDTOSchema } from '../../dtos'
 import { StatusCodes } from 'http-status-codes'
 
 export class UserProfileController {
