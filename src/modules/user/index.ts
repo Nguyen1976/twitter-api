@@ -11,5 +11,5 @@ export const setupUserProfile = (sequelize: Sequelize) => {
 
   const usecases = buildUserUseCases(infras)
 
-  return buildUserRouter(usecases)
+  return buildUserRouter(usecases, infras)
 }

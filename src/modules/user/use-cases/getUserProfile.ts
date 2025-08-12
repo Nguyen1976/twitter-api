@@ -20,7 +20,6 @@ export class GetUserProfileQueryHandler
 
 
     const authUser = await this.authServiceGrpc.getUser({ userId })
-    console.log('authUser:', authUser)
     return {
       ...authUser,
       ...userProfile,

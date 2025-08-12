@@ -9,6 +9,7 @@ import { ICommandHandler } from '~/share/interface'
 import { UserProfileCreateDTOSchema } from '../../dtos'
 
 export class UserProfileGrpcController {
+  
   constructor(
     private readonly createUserProfileCmdHandler: ICommandHandler<
       CreateCommand,

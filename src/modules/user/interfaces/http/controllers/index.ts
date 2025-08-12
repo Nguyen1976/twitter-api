@@ -4,7 +4,6 @@ import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import ApiError from '~/share/component/ApiError'
 import {
   UserProfile,
-  UserProfileCreateDTOSchema,
   UserProfileGetDTO,
 } from '../../dtos'
 import { StatusCodes } from 'http-status-codes'
