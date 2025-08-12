@@ -1,5 +1,3 @@
-export * from './checkEmail';
-export * from './checkUsername';
 export * from './register';
 export * from './login';
 export * from './refreshToken';

@@ -1,5 +1,5 @@
 import { CreateUserProfileCmdHandler } from './use-cases';
-import { GetUserProfileQueryHandler } from './use-cases/get';
+import { GetUserProfileQueryHandler } from './use-cases/getUserProfile';
 
 export function buildUserUseCases(
   infra: ReturnType<typeof import('./user.infras').buildUserInfrastructure>

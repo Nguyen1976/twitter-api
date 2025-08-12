@@ -15,18 +15,16 @@ export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
       return null
     }
 
-    const persistenceData = data.get({ plain: true }) //lấy dữ liệu thuần túy từ ModelInstance, không có method nào cả
+    const { created_at, updated_at, ...rest }  = data.get({ plain: true }) //lấy dữ liệu thuần túy từ ModelInstance, không có method nào cả
 
     return {
-      ...persistenceData,
-      createdAt: persistenceData.created_at,
-      updatedAt: persistenceData.updated_at,
+      ...rest,
+      createdAt: created_at,
+      updatedAt: updated_at,
     } as Entity
   }
 
   async findByCond(cond: Cond): Promise<Entity | null> {
-    console.log("Available models:", Object.keys(this.sequelize.models));
-
 
     const data = await this.sequelize.models[this.modelName].findOne({
       where: cond as any,
@@ -34,11 +32,11 @@ export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
     if (!data) {
       return null
     }
-    const persistenceData = data.get({ plain: true }) //lấy dữ liệu thuần túy từ ModelInstance, không có method nào cả
+    const { created_at, updated_at, ...rest } = data.get({ plain: true }) //lấy dữ liệu thuần túy từ ModelInstance, không có method nào cả
     return {
-      ...persistenceData,
-      createdAt: persistenceData.created_at,
-      updatedAt: persistenceData.updated_at,
+      ...rest,
+      createdAt: created_at,
+      updatedAt: updated_at,
     } as Entity
   }
   async insert(data: Entity): Promise<boolean> {

@@ -1,4 +1,3 @@
-
 import { BaseGrpcServer } from '~/share/grpc/BaseGrpcServer ';
 import { AuthGrpcController } from '../../interfaces/grpc/controller';
 

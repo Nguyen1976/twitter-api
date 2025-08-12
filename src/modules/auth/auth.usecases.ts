@@ -1,4 +1,4 @@
-import { CheckEmailQueryHandler, CheckUsernameQueryHandler, CreateNewUserCmdHandler, LoginUserQueryHandler, RefreshTokenCmdHandler, SendVerificationOtpCmdHandler, VerifyOtpCmdHandler } from './use-cases';
+import { CreateNewUserCmdHandler, LoginUserQueryHandler, RefreshTokenCmdHandler, SendVerificationOtpCmdHandler, VerifyOtpCmdHandler } from './use-cases';
 import { GetUserQueryHandler } from './use-cases/get';
 
 
@@ -23,8 +23,6 @@ export function buildAuthUseCases(infra: ReturnType<typeof import('./auth.infras
       infra.jwtService,
       infra.repository
     ),
-    checkEmailQueryHandler: new CheckEmailQueryHandler(infra.repository),
-    checkUsernameQueryHandler: new CheckUsernameQueryHandler(infra.repository),
     sendVerificationOtpCmdHandler: new SendVerificationOtpCmdHandler(
       infra.repository,
       infra.otpQueueService
