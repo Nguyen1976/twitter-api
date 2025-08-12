@@ -1,26 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import {
-  CheckEmailSchema,
-  CheckUsernameSchema,
-  SendVerificationOtpSchema,
-  UserCreateDTOSchema,
-  UserLoginDTOSchema,
-  VerifyOtpSchema,
-} from '../dtos/dto'
+import { CheckEmailQuery, CheckUsernameQuery, LoginUserQuery } from '../../userQueries'
+import { LoginResponse, SendVerificationOtpResponse } from '../../userResponses'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
-import { StatusCodes } from 'http-status-codes'
+import { CreateCommand, SendVerificationOtpCommand, VerifyOtpCommand } from '../../userCommands'
+import { CheckEmailSchema, CheckUsernameSchema, SendVerificationOtpSchema, UserCreateDTOSchema, UserLoginDTOSchema, VerifyOtpSchema } from '../../dtos/dto'
 import ApiError from '~/share/component/ApiError'
-import {
-  CreateCommand,
-  SendVerificationOtpCommand,
-  VerifyOtpCommand,
-} from '../userCommands'
-import {
-  CheckEmailQuery,
-  CheckUsernameQuery,
-  LoginUserQuery,
-} from '../userQueries'
-import { LoginResponse, SendVerificationOtpResponse } from '../userResponses'
+import { StatusCodes } from 'http-status-codes'
+
 
 export class AuthController {
   constructor(

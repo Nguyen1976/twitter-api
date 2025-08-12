@@ -1,5 +1,7 @@
 import { Router } from 'express'
-import { AuthController } from './interfaces/controllers'
+import { AuthController } from './interfaces/http/controllers'
+import { AuthGrpcController } from './interfaces/grpc/controller'
+import { AuthGrpcServer } from './infra/grpc/server'
 
 export function buildAuthRouter(usecases: ReturnType<typeof import('./auth.usecases').buildAuthUseCases>) {
   const controller = new AuthController(
@@ -11,6 +13,14 @@ export function buildAuthRouter(usecases: ReturnType<typeof import('./auth.useca
     usecases.sendVerificationOtpCmdHandler,
     usecases.verifyOtpCmdHandler
   )
+
+  //grpc
+  const grpcController = new AuthGrpcController(
+    usecases.getUser
+  )
+  new AuthGrpcServer(grpcController).start(50052)
+  
+  //end: grpc
 
   const router = Router()
   router.post('/register', controller.createAPI.bind(controller))

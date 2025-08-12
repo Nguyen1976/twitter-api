@@ -76,4 +76,10 @@ export const VerifyOtpSchema = z.object({
 
 export type VerifyOtpDTO = z.infer<typeof VerifyOtpSchema>
 
+export const getUserSchema = z.object({
+  userId: z.string().uuid(),
+})
+
+export type GetUserDTO = z.infer<typeof getUserSchema>
+
 export type UserCondDTO = {}

@@ -36,4 +36,10 @@ export const UserProfileUpdateDTOSchema = z.object({
 
 export type UserProfileUpdateDTO = z.infer<typeof UserProfileUpdateDTOSchema>
 
+export const UserProfileGetDTO = z.object({
+  userId: z.string().uuid(),
+})
+
+export type UserProfileGetDTO = z.infer<typeof UserProfileGetDTO>
+
 export type UserProfileCondDTO = {}

@@ -10,7 +10,7 @@ export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
   ) {}
   async get(id: string): Promise<Entity | null> {
     const data = await this.sequelize.models[this.modelName].findByPk(id) //trả về 1 ModelInstance và là 1 bản ghi có nhiều method chứ k thuần túy data
-
+    
     if (!data) {
       return null
     }

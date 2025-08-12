@@ -1,4 +1,5 @@
 import { CheckEmailQueryHandler, CheckUsernameQueryHandler, CreateNewUserCmdHandler, LoginUserQueryHandler, RefreshTokenCmdHandler, SendVerificationOtpCmdHandler, VerifyOtpCmdHandler } from './use-cases';
+import { GetUserQueryHandler } from './use-cases/get';
 
 
 
@@ -9,6 +10,9 @@ export function buildAuthUseCases(infra: ReturnType<typeof import('./auth.infras
       infra.passwordHashService,
       infra.emailService,
       infra.userProfileGrpcClient
+    ),
+    getUser: new GetUserQueryHandler(
+      infra.repository
     ),
     userLoginUsecase: new LoginUserQueryHandler(
       infra.repository,

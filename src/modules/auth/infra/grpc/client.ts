@@ -1,11 +1,8 @@
 import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
 import path from 'path'
-import {
-  CreateUserProfileRequest,
-  CreateUserProfileResponse,
-  IUserProfileService,
-} from '~/share/interface/grpc'
+import { CreateUserProfileRequest, CreateUserProfileResponse, IUserProfileService } from '~/share/interface/grpc'
+
 
 const PROTO_PATH = path.join(
   __dirname,

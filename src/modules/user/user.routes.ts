@@ -14,9 +14,10 @@ export function buildUserRouter(
   new UserProfileGrpcServer(userProfileControllerGrpc).start(50051)
   // end: gRPC
 
-  const controller = new UserProfileController(usecases.createProfile)
+  const controller = new UserProfileController(usecases.createProfile, usecases.getUser)
 
   const router = Router()
+  router.get('/profile', controller.getAPI.bind(controller))
   router.post('/profile', controller.createAPI.bind(controller))
   return router
 }
