@@ -20,12 +20,12 @@ export class CreateNewUserCmdHandler
   async execute(command: CreateCommand): Promise<string> {
     const isExist = await this.repository.findByCond({
       username: command.dto.username,
-      email: command.dto.email
+      email: command.dto.email,
     })
     if (isExist) {
       throw new UserAlreadyExistsError()
     }
-    
+
     const newId = v7()
 
     const hashedPassword = await this.passwordHashService.hash(
@@ -36,23 +36,20 @@ export class CreateNewUserCmdHandler
       id: newId,
       ...command.dto,
       birthDate: command.dto.birthDate,
-      password: hashedPassword
+      password: hashedPassword,
     }
 
     await this.repository.insert(newUser)
 
     await this.userProfileGrpcClient.CreateUserProfile({
-      userId: newUser.id
-    }).catch(err => {
-      console.error('Failed to create user profile:', err)
+      userId: newUser.id,
     })
 
-    this.emailService.sendWelcomeEmail(
-      newUser.email,
-      newUser.username
-    ).catch(err => {
-      console.error('Failed to send welcome email:', err)
-    })
+    this.emailService
+      .sendWelcomeEmail(newUser.email, newUser.username)
+      .catch((err) => {
+        console.error('Failed to send welcome email:', err)
+      })
 
     return newId
   }

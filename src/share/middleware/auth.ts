@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express'
 import { IJwtService } from '../interface'
 import { config } from '~/share/component/config'
 import { InvalidTokenError } from '../errors'
-import th from 'zod/v4/locales/th.cjs'
 import ApiError from '../component/ApiError'
 import { StatusCodes } from 'http-status-codes'
 

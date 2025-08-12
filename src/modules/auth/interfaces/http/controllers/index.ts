@@ -1,26 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import {
-  CheckEmailSchema,
-  CheckUsernameSchema,
-  SendVerificationOtpSchema,
-  UserCreateDTOSchema,
-  UserLoginDTOSchema,
-  VerifyOtpSchema,
-} from '../dtos/dto'
+import { LoginUserQuery } from '../../userQueries'
+import { LoginResponse, SendVerificationOtpResponse } from '../../userResponses'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
-import { StatusCodes } from 'http-status-codes'
+import { CreateCommand, SendVerificationOtpCommand, VerifyOtpCommand } from '../../userCommands'
+import { SendVerificationOtpSchema, UserCreateDTOSchema, UserLoginDTOSchema, VerifyOtpSchema } from '../../dtos/dto'
 import ApiError from '~/share/component/ApiError'
-import {
-  CreateCommand,
-  SendVerificationOtpCommand,
-  VerifyOtpCommand,
-} from '../userCommands'
-import {
-  CheckEmailQuery,
-  CheckUsernameQuery,
-  LoginUserQuery,
-} from '../userQueries'
-import { LoginResponse, SendVerificationOtpResponse } from '../userResponses'
+import { StatusCodes } from 'http-status-codes'
+
 
 export class AuthController {
   constructor(
@@ -30,14 +16,6 @@ export class AuthController {
       LoginResponse
     >,
     private readonly refreshTokenCmdHandler: ICommandHandler<string, string>,
-    private readonly checkEmailQueryHandler: IQueryHandler<
-      CheckEmailQuery,
-      boolean
-    >,
-    private readonly checkUsernameQueryHandler: IQueryHandler<
-      CheckUsernameQuery,
-      boolean
-    >,
     private readonly sendVerificationOtpCmdHandler: ICommandHandler<
       SendVerificationOtpCommand,
       SendVerificationOtpResponse
@@ -122,54 +100,7 @@ export class AuthController {
     }
   }
 
-  async checkEmailAPI(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const { success, data, error } = CheckEmailSchema.safeParse(req.body)
-
-      if (!success) {
-        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
-        return
-      }
-
-      const query: CheckEmailQuery = { dto: data }
-      const result = await this.checkEmailQueryHandler.query(query)
-
-      res.status(200).json({
-        success: true,
-        data: result,
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  async checkUsernameAPI(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const { success, data, error } = CheckUsernameSchema.safeParse(req.body)
-      if (!success) {
-        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
-        return
-      }
-
-      const query: CheckUsernameQuery = { dto: data }
-      const result = await this.checkUsernameQueryHandler.query(query)
-
-      res.status(200).json({
-        success: true,
-        data: result,
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
+  
 
   async sendVerificationAPI(
     req: Request,
