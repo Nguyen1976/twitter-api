@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
-import { CreateCommand } from '../../userProfileCommands'
+import { CreateCommand, UpdateCommand } from '../../userProfileCommands'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import ApiError from '~/share/component/ApiError'
-import { UserProfile, UserProfileCreateDTOSchema, UserProfileGetDTO } from '../../dtos'
+import {
+  UserProfile,
+  UserProfileCreateDTOSchema,
+  UserProfileGetDTO,
+  UserProfileUpdateDTOSchema,
+} from '../../dtos'
 import { StatusCodes } from 'http-status-codes'
 import { GetUserProfileQuery } from '../../userProfileQueries'
 import { GetUserResponse } from '~/share/interface/grpc/auth'
+import { AuthRequest } from '~/share/middleware/auth'
 
 export class UserProfileController {
   constructor(
@@ -16,6 +22,10 @@ export class UserProfileController {
     private readonly getUserProfileQueryHandler: IQueryHandler<
       GetUserProfileQuery,
       GetUserResponse & UserProfile
+    >,
+    private readonly updateUserProfileCmdHandler: ICommandHandler<
+      UpdateCommand,
+      boolean
     >
   ) {}
   async createAPI(
@@ -24,7 +34,9 @@ export class UserProfileController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { success, data, error } = UserProfileCreateDTOSchema.safeParse(req.body)
+      const { success, data, error } = UserProfileCreateDTOSchema.safeParse(
+        req.body
+      )
 
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
@@ -51,6 +63,32 @@ export class UserProfileController {
       }
       const query = <GetUserProfileQuery>{ dto: data }
       const result = await this.getUserProfileQueryHandler.query(query)
+      res.status(200).json({
+        success: true,
+        data: result,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updateAPI(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { success, data, error } = UserProfileUpdateDTOSchema.safeParse({
+        ...req.body,
+        userId: req?.user?.id,
+      })
+
+      if (!success) {
+        next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
+        return
+      }
+      const command: UpdateCommand = { dto: data }
+      const result = await this.updateUserProfileCmdHandler.execute(command)
       res.status(200).json({
         success: true,
         data: result,

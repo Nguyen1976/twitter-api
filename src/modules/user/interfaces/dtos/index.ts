@@ -24,6 +24,7 @@ export const UserProfileCreateDTOSchema = z.object({
 export type UserProfileCreateDTO = z.infer<typeof UserProfileCreateDTOSchema>
 
 export const UserProfileUpdateDTOSchema = z.object({
+  userId: z.string().uuid(),
   displayName: z.string().min(1).max(100).optional(),
   bio: z.string().max(500).optional(),
   location: z.string().max(100).optional(),

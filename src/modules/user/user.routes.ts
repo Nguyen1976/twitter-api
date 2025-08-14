@@ -16,12 +16,17 @@ export function buildUserRouter(
   new UserProfileGrpcServer(userProfileControllerGrpc).start(50051)
   // end: gRPC
 
-  const controller = new UserProfileController(usecases.createProfile, usecases.getUser)
+  const controller = new UserProfileController(
+    usecases.createProfile,
+    usecases.getUser,
+    usecases.updateProfileUser
+  )
 
   const authMiddleware = createAuthMiddleware(infra.jwtService)
 
   const router = Router()
   router.get('/profile/:userId', controller.getAPI.bind(controller))
   router.post('/profile', authMiddleware, controller.createAPI.bind(controller))
+  router.patch('/profile', authMiddleware, controller.updateAPI.bind(controller))
   return router
 }
