@@ -2,11 +2,20 @@ import { NextFunction, Request, Response } from 'express'
 import { LoginUserQuery } from '../../userQueries'
 import { LoginResponse, SendVerificationOtpResponse } from '../../userResponses'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
-import { CreateCommand, SendVerificationOtpCommand, VerifyOtpCommand } from '../../userCommands'
-import { SendVerificationOtpSchema, UserCreateDTOSchema, UserLoginDTOSchema, VerifyOtpSchema } from '../../dtos/dto'
+import {
+  CreateCommand,
+  SendVerificationOtpCommand,
+  VerifyOtpCommand,
+} from '../../userCommands'
+import {
+  SendVerificationOtpSchema,
+  UserCreateDTOSchema,
+  UserLoginDTOSchema,
+  VerifyOtpSchema,
+} from '../../dtos/dto'
 import ApiError from '~/share/component/ApiError'
 import { StatusCodes } from 'http-status-codes'
-
+import ms from 'ms'
 
 export class AuthController {
   constructor(
@@ -65,9 +74,23 @@ export class AuthController {
       const query: LoginUserQuery = { dto: data }
       const result = await this.loginQueryHandler.query(query as any)
 
+      res.cookie('accessToken', result.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days'),
+      })
+
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days'),
+      })
+
       res.status(200).json({
         success: true,
-        data: result,
+        data: result.user,
       })
     } catch (error) {
       next(error)
@@ -80,27 +103,33 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const refreshToken = req.body.refreshToken
+      const refreshToken = req.cookies?.refreshToken
       if (!refreshToken) {
         next(
           new ApiError(
             StatusCodes.FORBIDDEN,
             'Refresh token is required or expired'
           )
-        ) //Lỗi 403 cho refresh token hết hạn
+        )
+        //Lỗi 403 cho refresh token hết hạn(client call api logout)
         return
       }
 
       const newAccessToken = await this.refreshTokenCmdHandler.execute(
         refreshToken
       )
+
+      res.cookie('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days'),
+      })
       res.status(200).json({ success: true, data: newAccessToken })
     } catch (error: any) {
       next(new ApiError(StatusCodes.FORBIDDEN, error.message))
     }
   }
-
-  
 
   async sendVerificationAPI(
     req: Request,
@@ -146,6 +175,20 @@ export class AuthController {
         success: true,
         data: isValid,
       })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async logoutAPI(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      res.clearCookie('accessToken')
+      res.clearCookie('refreshToken')
+      res.status(200).json({ success: true })
     } catch (error) {
       next(error)
     }

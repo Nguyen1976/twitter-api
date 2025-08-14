@@ -27,6 +27,7 @@ export function buildAuthRouter(usecases: ReturnType<typeof import('./auth.useca
   router.post('/refresh-token', controller.refreshTokenAPI.bind(controller))
   router.post('/send-verification', controller.sendVerificationAPI.bind(controller))
   router.post('/verify-otp', controller.verifyOtpAPI.bind(controller))
+  router.delete('/logout', controller.logoutAPI.bind(controller))
 
   return router
 }

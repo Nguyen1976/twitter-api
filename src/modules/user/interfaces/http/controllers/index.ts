@@ -2,10 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { CreateCommand } from '../../userProfileCommands'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
 import ApiError from '~/share/component/ApiError'
-import {
-  UserProfile,
-  UserProfileGetDTO,
-} from '../../dtos'
+import { UserProfile, UserProfileCreateDTOSchema, UserProfileGetDTO } from '../../dtos'
 import { StatusCodes } from 'http-status-codes'
 import { GetUserProfileQuery } from '../../userProfileQueries'
 import { GetUserResponse } from '~/share/interface/grpc/auth'
@@ -27,13 +24,13 @@ export class UserProfileController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { success, data, error } = UserProfileGetDTO.safeParse(req.body)
+      const { success, data, error } = UserProfileCreateDTOSchema.safeParse(req.body)
 
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
-      const command: GetUserProfileQuery = { dto: data }
+      const command: CreateCommand = { dto: data }
       const result = await this.createUserProfileCmdHandler.execute(command)
       res.status(201).json({
         success: true,
@@ -46,7 +43,7 @@ export class UserProfileController {
 
   async getAPI(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { success, data, error } = UserProfileGetDTO.safeParse(req.body)
+      const { success, data, error } = UserProfileGetDTO.safeParse(req.params)
 
       if (!success) {
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))

@@ -21,7 +21,7 @@ export function buildUserRouter(
   const authMiddleware = createAuthMiddleware(infra.jwtService)
 
   const router = Router()
-  router.get('/profile', authMiddleware, controller.getAPI.bind(controller))
+  router.get('/profile/:userId', controller.getAPI.bind(controller))
   router.post('/profile', authMiddleware, controller.createAPI.bind(controller))
   return router
 }
