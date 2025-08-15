@@ -21,7 +21,7 @@ export class AuthMiddleware {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const token = this.extractToken(req)
+      const token = req.cookies?.accessToken
       if (!token) {
         next(new ApiError(StatusCodes.UNAUTHORIZED, 'Access token is required'))
         return
@@ -52,10 +52,6 @@ export class AuthMiddleware {
     }
   }
 
-  private extractToken(req: Request): string | null {
-    const authHeader = req.headers.authorization
-    return authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null
-  }
 }
 
 // Factory function để tạo middleware

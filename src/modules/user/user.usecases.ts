@@ -1,4 +1,4 @@
-import { CreateUserProfileCmdHandler } from './use-cases';
+import { CreateUserProfileCmdHandler, UpdateUserProfileCmdHandler } from './use-cases';
 import { GetUserProfileQueryHandler } from './use-cases/getUserProfile';
 
 export function buildUserUseCases(
@@ -7,5 +7,6 @@ export function buildUserUseCases(
   return {
     createProfile: new CreateUserProfileCmdHandler(infra.repository),
     getUser: new GetUserProfileQueryHandler(infra.repository, infra.authGrpcClient),
+    updateProfileUser: new UpdateUserProfileCmdHandler(infra.repository),
   }
 }
