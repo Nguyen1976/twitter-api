@@ -53,7 +53,7 @@ import { setupUserProfile } from './modules/user'
     // })
 
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
-    app.use('/api/v1/user', setupUserProfile(sequelize))
+    app.use('/api/v1/user', setupUserProfile(sequelize, redis))
 
     app.use(errorHandlingMiddleware)
 

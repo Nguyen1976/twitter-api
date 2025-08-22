@@ -28,9 +28,9 @@ export const UserProfileUpdateDTOSchema = z.object({
   displayName: z.string().min(1).max(100).optional(),
   bio: z.string().max(500).optional(),
   location: z.string().max(100).optional(),
-  website: z.string().url().max(200).optional(),
-  avatarUrl: z.string().url().max(200).optional(),
-  headerImageUrl: z.string().url().max(200).optional(),
+  website: z.string().max(200).optional(),
+  avatarUrl: z.any().optional(),
+  headerImageUrl: z.any().optional(),
   followerCount: z.number().int().nonnegative().optional(),
   followingCount: z.number().int().nonnegative().optional(),
 })

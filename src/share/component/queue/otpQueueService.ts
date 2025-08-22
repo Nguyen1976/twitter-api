@@ -25,7 +25,6 @@ export class OtpQueueService extends BaseQueueService<IOtpJobData> {
 
   protected async process(job: Job<IOtpJobData>): Promise<boolean> {
     const { email, username } = job.data
-    console.log("🚀 ~ otpQueueService.ts:28 ~ job.data:", job.data)
 
     const { otp } = await this.otpService.generate(email)
     const emailSent = await this.emailService.sendOtpEmail(email, otp)
@@ -35,7 +34,6 @@ export class OtpQueueService extends BaseQueueService<IOtpJobData> {
       throw new Error('Không thể gửi email xác thực.')
     }
 
-    console.log(`✅ OTP sent to: ${email}`)
     return true
   }
 

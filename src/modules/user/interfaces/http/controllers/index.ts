@@ -81,12 +81,20 @@ export class UserProfileController {
       const { success, data, error } = UserProfileUpdateDTOSchema.safeParse({
         ...req.body,
         userId: req?.user?.id,
+        avatarUrl: Array.isArray(req.files)
+          ? undefined
+          : (req.files as Record<string, Express.Multer.File[]>)?.avatarUrl?.[0],
+        headerImageUrl: Array.isArray(req.files)
+          ? undefined
+          : (req.files as Record<string, Express.Multer.File[]>)?.headerImageUrl?.[0],
       })
 
       if (!success) {
+        console.error('Validation error:', error.message)
         next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
         return
       }
+      
       const command: UpdateCommand = { dto: data }
       const result = await this.updateUserProfileCmdHandler.execute(command)
       res.status(200).json({
