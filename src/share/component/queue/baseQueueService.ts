@@ -35,9 +35,7 @@ export abstract class BaseQueueService<T> {
 
   protected setupEventHandlers() {
     this.worker?.on('completed', (job) => {
-      console.log(
-        `[✔️ Completed] Job ${job.id} for ${JSON.stringify(job.data)}`
-      )
+      console.log(`[✔️ Completed] Job ${job.id}}`)
     })
 
     this.worker?.on('failed', (job, err) => {

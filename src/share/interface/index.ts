@@ -15,7 +15,7 @@ export interface ICommandRepository<Entity, UpdateDTO> {
 
 export interface ICommandHandler<Cmd, Result> {
   execute(command: Cmd): Promise<Result>
-} 
+}
 
 export interface IQueryHandler<Query, Result> {
   query(query: Query): Promise<Result>
@@ -65,4 +65,10 @@ export interface IOtpService {
 export interface IOtpJobData {
   email: string
   username: string
+}
+
+
+export interface ICloudinaryService {
+  uploadImage(file: Express.Multer.File, folderName?: string): Promise<string>
+  deleteImage(publicId: string): Promise<boolean>
 }

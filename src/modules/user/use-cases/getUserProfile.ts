@@ -17,7 +17,7 @@ export class GetUserProfileQueryHandler
   ): Promise<GetUserResponse & UserProfile> {
     const { userId } = query.dto
     const userProfile = await this.repository.findByCond({ userId }) //dữ liệu từ userProfile
-
+    console.log("🚀 ~ userProfile:", userProfile)
 
     const authUser = await this.authServiceGrpc.getUser({ userId })
     return {
