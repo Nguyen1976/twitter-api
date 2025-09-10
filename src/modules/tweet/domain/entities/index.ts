@@ -1,8 +1,9 @@
-import { MediaType } from "express"
-import { TweetType } from "../types"
+import { MediaType } from 'express'
+import { TweetType } from '../types'
 
 // Tweet chính + reply + quote + retweet đều trong 1 interface
 export interface Tweet {
+  video: undefined
   id: string
   userId: string
   contentText?: string // null hoặc undefined nếu retweet chay
@@ -11,23 +12,8 @@ export interface Tweet {
   likeCount: number
   replyCount: number
   retweetCount: number
+  media_url: string
+  media_type: MediaType
   createdAt: Date
   updatedAt: Date
 }
-
-// Media kèm theo tweet
-export interface TweetMedia {
-  id: string
-  tweetId: string
-  mediaUrl: string
-  type: MediaType
-}
-
-
-// export interface Like {
-//   id: string
-//   userId: string
-//   tweetId: string
-//   createdAt: Date
-// }
-

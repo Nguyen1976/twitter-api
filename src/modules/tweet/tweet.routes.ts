@@ -1,11 +1,25 @@
 import { Router } from 'express'
+import { TweetController } from './interfaces/http/controllers'
+import { multerUploadMiddleware } from '~/share/middleware/multerUpload'
+import { createAuthMiddleware } from '~/share/middleware/auth'
 
-export function buildAuthRouter(
-  usecases: ReturnType<typeof import('./tweet.usecases').buildTweetUseCases>
+export function buildTweetRouter(
+  usecases: ReturnType<typeof import('./tweet.usecases').buildTweetUseCases>,
+  infra: ReturnType<typeof import('./tweet.infras').buildTweetInfrastructure>
 ) {
   const router = Router()
 
-  // router.post('/')//tweet thông thường
+  const tweetController = new TweetController(usecases.createTweet)
+
+  const authMiddleware = createAuthMiddleware(infra.jwtService)
+
+  router.post(
+    '/',
+    authMiddleware,
+    multerUploadMiddleware.uploadTweetMedia,
+    multerUploadMiddleware.parseFormData,
+    tweetController.createTweet.bind(tweetController)
+  ) //tweet thông thường
   // router.post('/reply')//reply
   // router.post('/requote')//quote
   // router.post('/repost')//retweet
@@ -53,7 +67,6 @@ export function buildAuthRouter(
  * parentTweetId
  * và phần like reply hay retweet repost sẽ được tính vào post cha
  */
-
 
 //sau đó xây dựng timeline dựa trên phương thức ranking based (suy nghĩ sau)
 //việc cập nhật timeline
