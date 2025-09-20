@@ -1,7 +1,9 @@
 import { DataTypes, Model, Sequelize } from 'sequelize'
 import { MediaType, TweetType } from '../../domain/types'
 
-export class TweetPersistence extends Model {}
+export class TweetPersistence extends Model {
+  declare id: string
+}
 
 export const modelName = 'Tweet'
 

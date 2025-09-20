@@ -39,9 +39,9 @@ export abstract class BaseRepositorySequelize<Entity, Cond, UpdateDTO>
       updatedAt: updated_at,
     } as Entity
   }
-  async insert(data: Entity): Promise<boolean> {
-    await this.sequelize.models[this.modelName].create(data as any) // Cast to any to avoid type issues with Sequelize
-    return true
+  async insert(data: Entity): Promise<Entity> {
+    let created = await this.sequelize.models[this.modelName].create(data as any) // Cast to any to avoid type issues with Sequelize
+    return created.toJSON() as Entity;
   }
 
   async update(id: string, data: UpdateDTO): Promise<boolean> {

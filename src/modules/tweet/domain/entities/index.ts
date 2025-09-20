@@ -1,19 +1,43 @@
-import { MediaType } from 'express'
-import { TweetType } from '../types'
+import { MediaType, TweetType } from '../types'
 
 // Tweet chính + reply + quote + retweet đều trong 1 interface
-export interface Tweet {
-  video: undefined
-  id: string
-  userId: string
-  contentText?: string // null hoặc undefined nếu retweet chay
-  type: TweetType
-  parentTweetId?: string // dùng cho reply, quote, retweet (FK đến tweet gốc)
-  likeCount: number
-  replyCount: number
-  retweetCount: number
-  media_url: string
-  media_type: MediaType
-  createdAt: Date
-  updatedAt: Date
+export class Tweet {
+  userId: string;
+  contentText?: string;
+  type: TweetType;
+  parentTweetId?: string;
+  likeCount: number;
+  replyCount: number;
+  retweetCount: number;
+  mediaUrl: string;
+  mediaType: MediaType;
+  createdAt?: Date;
+  updatedAt?: Date;
+  id: any;
+
+  constructor(
+    userId: string,
+    contentText: string | undefined,
+    type: TweetType,
+    parentTweetId: string | undefined,
+    likeCount: number,
+    replyCount: number,
+    retweetCount: number,
+    mediaUrl: string,
+    mediaType: MediaType,
+    createdAt: Date,
+    updatedAt: Date
+  ) {
+    this.userId = userId;
+    this.contentText = contentText;
+    this.type = type;
+    this.parentTweetId = parentTweetId;
+    this.likeCount = likeCount;
+    this.replyCount = replyCount;
+    this.retweetCount = retweetCount;
+    this.mediaUrl = mediaUrl;
+    this.mediaType = mediaType;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
 }

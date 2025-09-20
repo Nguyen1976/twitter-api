@@ -1,33 +1,59 @@
-import { ICommandHandler } from "~/share/interface";
-import { CreateTweetCommand } from "../interfaces/tweetCommands";
-import { Tweet } from "../domain/entities";
-import { ITweetRepository } from "../interfaces/tweetRepository";
-
+import { ICommandHandler } from '~/share/interface'
+import { CreateTweetCommand } from '../interfaces/tweetCommands'
+import { Tweet } from '../domain/entities'
+import { ITweetRepository } from '../interfaces/tweetRepository'
+import { MediaType as TweetMediaType, TweetType } from '../domain/types'
 
 export class CreateNewTweetCmdHandler
   implements ICommandHandler<CreateTweetCommand, Tweet>
 {
   constructor(
     private readonly repository: ITweetRepository,
+    private readonly uploadTweetImageQueue: any
   ) {}
 
   async execute(command: CreateTweetCommand): Promise<Tweet> {
-    const tweet = command.dto;
-    if(tweet.video) {
-      //upload video to cloud
-    } else {
-      //upload images to cloud
-    }
+    const {
+      userId,
+      contentText,
+      type,
+      parentTweetId,
+      video,
+      images,
+      createdAt,
+      updatedAt,
+    } = command.dto
+    let mediaType = video ? TweetMediaType.VIDEO : TweetMediaType.IMAGE
+    const tweet = new Tweet(
+      userId,
+      contentText,
+      type as TweetType,
+      parentTweetId,
+      0,
+      0,
+      0,
+      '',
+      mediaType as TweetMediaType,
+      createdAt,
+      updatedAt
+    )
+
+    let inserted = await this.repository.insert(tweet)
 
     //sẽ tạo queue để upload images và video sau đó từ mảng url của images hoặc video có thể tạo thành 1 text url trong db sau đó insert vào trong db
-    console.log("Creating new tweet", tweet);
+    //=> trên thực tế lên để image upload sau cùng và nó sẽ gọi update vào db
 
-    //create object tweet
-    //upload media
-    // await this.repository.insert(tweet);
+    if (video) {
+      //upload video to cloud
+    } else {
+      this.uploadTweetImageQueue.uploadImage({
+        id: inserted?.id,
+        images,
+      })
+    }
 
     //future call timeline service to update timeline
 
-    return {} as Tweet;
+    return inserted as Tweet
   }
 }
