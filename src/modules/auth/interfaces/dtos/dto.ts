@@ -40,22 +40,6 @@ export const UserLoginDTOSchema = z.object({
 
 export type UserLoginDTO = z.infer<typeof UserLoginDTOSchema>
 
-export const CheckUsernameSchema = z.object({
-  username: z
-    .string()
-    .min(3)
-    .max(20)
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username chỉ chứa chữ, số và _'),
-})
-
-export type CheckUsernameDTO = z.infer<typeof CheckUsernameSchema>
-
-export const CheckEmailSchema = z.object({
-  email: z.string().email('Email không hợp lệ'),
-})
-
-export type CheckEmailDTO = z.infer<typeof CheckEmailSchema>
-
 export const SendVerificationOtpSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
   username: z

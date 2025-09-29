@@ -1,4 +1,4 @@
-import { CheckEmailDTO, CheckUsernameDTO, GetUserDTO, UserLoginDTO } from "./dtos/dto"
+import { GetUserDTO, UserLoginDTO } from "./dtos/dto"
 
 
 export interface LoginUserQuery {

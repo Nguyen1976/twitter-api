@@ -8,7 +8,7 @@ export interface IQueryRepository<Entity, Cond> {
 }
 
 export interface ICommandRepository<Entity, UpdateDTO> {
-  insert(data: Entity): Promise<boolean>
+  insert(data: Entity): Promise<Entity>
   update(id: string, data: UpdateDTO): Promise<boolean>
   delete(id: string, isHard: boolean): Promise<boolean>
 }

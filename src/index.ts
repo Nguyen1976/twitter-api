@@ -7,7 +7,8 @@ import { config } from './share/component/config'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { setupUserProfile } from './modules/user'
-;(async () => {
+;import { setupTweet } from './modules/tweet'
+(async () => {
   try {
     await sequelize.authenticate()
 
@@ -54,6 +55,7 @@ import { setupUserProfile } from './modules/user'
 
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
+    app.use('/api/v1/tweet', setupTweet(sequelize, redis))
 
     app.use(errorHandlingMiddleware)
 
