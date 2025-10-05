@@ -58,7 +58,6 @@ export class CreateNewTweetCmdHandler
     this.tweetEventPublisher.publishTweetCreated({
       tweetId: inserted!.id,
       userId: inserted!.userId,
-      createdAt: new Date().toISOString(),
     })
 
     return inserted as Tweet

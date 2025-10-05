@@ -4,7 +4,6 @@ import * as amqp from 'amqplib'
 export interface ITweetCreatedEvent {
   tweetId: string
   userId: string
-  createdAt: string
 }
 
 export class TweetEventPublisher {

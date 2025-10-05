@@ -1,5 +1,5 @@
 import Redis from 'ioredis'
-import { IRedisRepository } from '../interface'
+import { IRedisRepository, IRepository } from '../interface'
 
 export abstract class BaseRepositoryRedis implements IRedisRepository {
   constructor(protected readonly redis: Redis) {}

@@ -1,10 +1,10 @@
 import * as amqp from 'amqplib'
-import type { Connection, Channel } from 'amqplib' 
+import type { Channel } from 'amqplib'
 import { config } from '../config'
 
 export class RabbitMQConnection {
   private static connection: any | null = null
-//   private static connection: Connection | null = null bị lõi về type lên sẽ tạm thời để any
+  //   private static connection: Connection | null = null bị lõi về type lên sẽ tạm thời để any
 
   private static channel: Channel | null = null
 

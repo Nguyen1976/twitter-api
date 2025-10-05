@@ -8,6 +8,9 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { setupUserProfile } from './modules/user'
 ;import { setupTweet } from './modules/tweet'
+import { set } from 'zod'
+import { setupTimelineModule } from './modules/timeline'
+import { RabbitMQConnection } from './share/component/rabbitmq/connection'
 (async () => {
   try {
     await sequelize.authenticate()
@@ -15,6 +18,8 @@ import { setupUserProfile } from './modules/user'
     await sequelize.sync({ alter: true })
 
     await RedisConnection.connect()
+
+    await RabbitMQConnection.connect()
 
     const app = express()
     const port = config.app.port || 3001
@@ -56,6 +61,7 @@ import { setupUserProfile } from './modules/user'
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
     app.use('/api/v1/tweet', setupTweet(sequelize, redis))
+    await setupTimelineModule(redis)
 
     app.use(errorHandlingMiddleware)
 
