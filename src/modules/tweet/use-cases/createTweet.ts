@@ -3,7 +3,7 @@ import { CreateTweetCommand } from '../interfaces/tweetCommands'
 import { Tweet } from '../domain/entities'
 import { ITweetRepository } from '../interfaces/tweetRepository'
 import { MediaType as TweetMediaType, TweetType } from '../domain/types'
-import { TweetEventPublisher } from '~/share/component/rabbitmq/publishers/tweetEventPublisher'
+import { TweetEventPublisher } from '~/modules/tweet/infra/rabbitmq/publishers/tweetEventPublisher'
 
 export class CreateNewTweetCmdHandler
   implements ICommandHandler<CreateTweetCommand, Tweet>

@@ -7,7 +7,7 @@ export interface ITweetCreatedEvent {
 }
 
 export class TweetEventPublisher {
-  private channel: amqp.Channel = RabbitMQConnection.getChannel()
+  constructor(private readonly channel: amqp.Channel) {}
 
   async publishTweetCreated(event: ITweetCreatedEvent): Promise<void> {
     try {

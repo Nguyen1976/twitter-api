@@ -3,12 +3,12 @@ import type { Channel } from 'amqplib'
 import { config } from '../config'
 
 export class RabbitMQConnection {
-  private static connection: any | null = null
-  //   private static connection: Connection | null = null bị lõi về type lên sẽ tạm thời để any
+  private connection: any | null = null
+  //   private connection: Connection | null = null bị lõi về type lên sẽ tạm thời để any
 
-  private static channel: Channel | null = null
+  private channel: Channel | null = null
 
-  static async connect(): Promise<void> {
+  async connect(): Promise<Channel> {
     try {
       if (!this.connection) {
         this.connection = await amqp.connect(
@@ -23,13 +23,15 @@ export class RabbitMQConnection {
       }
 
       await this.setupExchangesAndQueues()
+
+      return this.channel as Channel
     } catch (error) {
       console.error('Error connecting to RabbitMQ:', error)
       throw error
     }
   }
 
-  private static async setupExchangesAndQueues(): Promise<void> {
+  private async setupExchangesAndQueues(): Promise<void> {
     if (!this.channel) throw new Error('Channel not initialized')
 
     // Tạo hoặc xác nhận exchange tweet.events dạng topic bền
@@ -51,14 +53,14 @@ export class RabbitMQConnection {
     console.log('✅ RabbitMQ exchanges and queues setup complete')
   }
 
-  static getChannel(): amqp.Channel {
+  getChannel(): amqp.Channel {
     if (!this.channel) {
       throw new Error('Channel not initialized. Call connect() first.')
     }
     return this.channel
   }
 
-  static async disconnect(): Promise<void> {
+  async disconnect(): Promise<void> {
     try {
       if (this.channel) {
         await this.channel.close()

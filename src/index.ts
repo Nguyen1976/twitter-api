@@ -11,6 +11,7 @@ import { setupUserProfile } from './modules/user'
 import { set } from 'zod'
 import { setupTimelineModule } from './modules/timeline'
 import { RabbitMQConnection } from './share/component/rabbitmq/connection'
+import { Channel } from 'amqplib'
 (async () => {
   try {
     await sequelize.authenticate()
@@ -19,7 +20,7 @@ import { RabbitMQConnection } from './share/component/rabbitmq/connection'
 
     await RedisConnection.connect()
 
-    await RabbitMQConnection.connect()
+    const channel: Channel = await new RabbitMQConnection().connect()
 
     const app = express()
     const port = config.app.port || 3001
@@ -60,8 +61,8 @@ import { RabbitMQConnection } from './share/component/rabbitmq/connection'
 
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
-    app.use('/api/v1/tweet', setupTweet(sequelize, redis))
-    await setupTimelineModule(redis)
+    app.use('/api/v1/tweet', setupTweet(sequelize, redis, channel))
+    await setupTimelineModule(redis, channel)
 
     app.use(errorHandlingMiddleware)
 

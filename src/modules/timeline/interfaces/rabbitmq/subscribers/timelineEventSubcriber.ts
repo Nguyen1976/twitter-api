@@ -1,16 +1,16 @@
 import { RabbitMQConnection } from '~/share/component/rabbitmq/connection'
-import { ITweetCreatedEvent } from '~/share/component/rabbitmq/publishers/tweetEventPublisher'
+import { ITweetCreatedEvent } from '~/modules/tweet/infra/rabbitmq/publishers/tweetEventPublisher'
 import { ICommandHandler } from '~/share/interface'
 import { ITimeLineCommand } from '../../TimeLineCommand'
+import { Channel } from 'amqplib'
 
 export class TimelineEventSubscriber {
-  private channel = RabbitMQConnection.getChannel()
-
   constructor(
-    private updateTimeline: ICommandHandler<ITimeLineCommand, void>
+    private readonly updateTimeline: ICommandHandler<ITimeLineCommand, void>,
+    private readonly channel: Channel
   ) {}
 
-  async subcribeTweetEvents(): Promise<void> {
+  async subscribeTweetEvents(): Promise<void> {
     try {
       await this.channel.consume(
         'timeline.tweet.created',
@@ -20,6 +20,7 @@ export class TimelineEventSubscriber {
 
           try {
             const event: ITweetCreatedEvent = JSON.parse(msg.content.toString())
+            console.log('Received tweet.created event:', event)
 
             await this.updateTimeline.execute({
               dto: {
@@ -31,6 +32,7 @@ export class TimelineEventSubscriber {
             this.channel.ack(msg)
           } catch (error) {
             this.channel.nack(msg, false, false)
+            console.error('Error processing tweet.created event:', error)
           }
         },
         { noAck: false } // đảm bảo message được ack

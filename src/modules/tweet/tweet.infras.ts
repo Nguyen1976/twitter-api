@@ -4,9 +4,10 @@ import { JwtService } from '~/share/component/jwt'
 import { UploadImageQueueService } from './infra/queue/uploadTweetImagesQueue'
 import { CloudinaryService } from '~/share/component/cloudinary'
 import Redis from 'ioredis'
-import { TweetEventPublisher } from '~/share/component/rabbitmq/publishers/tweetEventPublisher'
+import { TweetEventPublisher } from '~/modules/tweet/infra/rabbitmq/publishers/tweetEventPublisher'
+import { Channel } from 'amqplib'
 
-export function buildTweetInfrastructure(sequelize: Sequelize, redis: Redis) {
+export function buildTweetInfrastructure(sequelize: Sequelize, redis: Redis, channel: Channel) {
   let tweetRepository = new MySQLTweetRepository(sequelize)
   let cloudinaryService = new CloudinaryService()
   return {
@@ -18,6 +19,6 @@ export function buildTweetInfrastructure(sequelize: Sequelize, redis: Redis) {
       cloudinaryService,
       tweetRepository
     ),
-    tweetEventPublisher: new TweetEventPublisher(),
+    tweetEventPublisher: new TweetEventPublisher(channel),
   }
 }
