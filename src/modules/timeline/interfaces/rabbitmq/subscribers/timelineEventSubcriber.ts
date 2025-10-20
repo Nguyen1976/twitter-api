@@ -20,7 +20,6 @@ export class TimelineEventSubscriber {
 
           try {
             const event: ITweetCreatedEvent = JSON.parse(msg.content.toString())
-            console.log('Received tweet.created event:', event)
 
             await this.updateTimeline.execute({
               dto: {
@@ -31,7 +30,8 @@ export class TimelineEventSubscriber {
 
             this.channel.ack(msg)
           } catch (error) {
-            this.channel.nack(msg, false, false)
+            this.channel.nack(msg, false, false)//message drop
+            // this.channel.nack(msg, false, true)//message retry
             console.error('Error processing tweet.created event:', error)
           }
         },

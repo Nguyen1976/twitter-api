@@ -6,7 +6,7 @@ export function buildTweetUseCases(
 ) {
   return {
     updateTimeline: new UpdateTimelineCmdHandler(
-        infra.redis,
+        infra.timelineRepository,
     ),
   }
 }

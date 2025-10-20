@@ -1,10 +1,10 @@
 import { BaseRepositoryRedis } from '~/share/repository/redis'
-import { IUserRedisRepository } from '../../interfaces/userRepository'
 import Redis from 'ioredis'
+import { ITimelineRedisRepository } from '../../interfaces/TimelineRepositories'
 
-export class RedisUserRepository
+export class RedisTimelineRepository
   extends BaseRepositoryRedis
-  implements IUserRedisRepository
+  implements ITimelineRedisRepository
 {
   constructor(redis: Redis) {
     super(redis)

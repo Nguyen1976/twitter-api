@@ -2,23 +2,29 @@ import express, { Request, Response } from 'express'
 import { setupAuth } from './modules/auth'
 import { sequelize } from './share/component/sequelize'
 import { errorHandlingMiddleware } from './share/middleware/errorHandling'
-import RedisConnection, { redis } from './share/component/redis'
+import RedisConnection from './share/component/redis'
 import { config } from './share/component/config'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { setupUserProfile } from './modules/user'
-;import { setupTweet } from './modules/tweet'
+import { setupTweet } from './modules/tweet'
 import { set } from 'zod'
 import { setupTimelineModule } from './modules/timeline'
 import { RabbitMQConnection } from './share/component/rabbitmq/connection'
 import { Channel } from 'amqplib'
-(async () => {
+import { MongoDBConnection } from './share/component/mongodb'
+;(async () => {
   try {
     await sequelize.authenticate()
 
     await sequelize.sync({ alter: true })
 
-    await RedisConnection.connect()
+    const redisConnection = new RedisConnection()
+    const redis = redisConnection.getInstance()
+    await redisConnection.connect()
+
+    const mongoDBConnection = new MongoDBConnection()
+    const mongoDB = await mongoDBConnection.connect()
 
     const channel: Channel = await new RabbitMQConnection().connect()
 
@@ -62,7 +68,7 @@ import { Channel } from 'amqplib'
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
     app.use('/api/v1/tweet', setupTweet(sequelize, redis, channel))
-    await setupTimelineModule(redis, channel)
+    await setupTimelineModule(redis, channel, mongoDB)
 
     app.use(errorHandlingMiddleware)
 

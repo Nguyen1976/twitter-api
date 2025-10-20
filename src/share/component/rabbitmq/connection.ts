@@ -19,7 +19,6 @@ export class RabbitMQConnection {
 
       if (!this.channel) {
         this.channel = await this.connection.createChannel()
-        console.log('Created RabbitMQ channel')
       }
 
       await this.setupExchangesAndQueues()

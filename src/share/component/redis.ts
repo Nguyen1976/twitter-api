@@ -2,11 +2,11 @@ import Redis from 'ioredis'
 import { config } from './config'
 
 class RedisConnection {
-  private static instance: Redis
+  private instance: Redis | undefined
 
-  public static getInstance(): Redis {
-    if (!RedisConnection.instance) {
-      RedisConnection.instance = new Redis({
+  getInstance(): Redis {
+    if (!this.instance) {
+      this.instance = new Redis({
         host: config.redis.host,
         port: config.redis.port,
         password: config.redis.password,
@@ -19,24 +19,24 @@ class RedisConnection {
       })
 
       // Event listeners
-      RedisConnection.instance.on('connect', () => {
+      this.instance.on('connect', () => {
         console.log('Redis connected successfully')
       })
 
-      RedisConnection.instance.on('error', (err) => {
+      this.instance.on('error', (err) => {
         console.error('Redis connection error:', err)
       })
 
-      RedisConnection.instance.on('ready', () => {
+      this.instance.on('ready', () => {
         console.log('Redis is ready to use')
       })
     }
 
-    return RedisConnection.instance
+    return this.instance
   }
 
-  public static async connect(): Promise<void> {
-    const redis = RedisConnection.getInstance()
+  async connect(): Promise<void> {
+    const redis = this.getInstance()
     try {
       await redis.connect()
     } catch (error) {
@@ -45,13 +45,12 @@ class RedisConnection {
     }
   }
 
-  public static async disconnect(): Promise<void> {
-    if (RedisConnection.instance) {
-      await RedisConnection.instance.disconnect()
+  async disconnect(): Promise<void> {
+    if (this.instance) {
+      await this.instance.disconnect()
       console.log('Redis disconnected')
     }
-  }
+  } 
 }
 
-export const redis = RedisConnection.getInstance()
 export default RedisConnection

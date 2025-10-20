@@ -42,5 +42,9 @@ export const config = {
   },
   rabbitmq: {
     url: process.env.RABBITMQ_URL || 'amqp://localhost',
+  },
+  mongodb: {
+    url: process.env.MONGODB_URL || 'mongodb://localhost:27017',
+    database: process.env.MONGODB_DATABASE || 'twitter',
   }
 }
