@@ -3,13 +3,15 @@ import { CreateTweetCommand } from '../interfaces/tweetCommands'
 import { Tweet } from '../domain/entities'
 import { ITweetRepository } from '../interfaces/tweetRepository'
 import { MediaType as TweetMediaType, TweetType } from '../domain/types'
+import { TweetEventPublisher } from '~/modules/tweet/infra/rabbitmq/publishers/tweetEventPublisher'
 
 export class CreateNewTweetCmdHandler
   implements ICommandHandler<CreateTweetCommand, Tweet>
 {
   constructor(
     private readonly repository: ITweetRepository,
-    private readonly uploadTweetImageQueue: any
+    private readonly uploadTweetImageQueue: any,
+    private tweetEventPublisher: TweetEventPublisher
   ) {}
 
   async execute(command: CreateTweetCommand): Promise<Tweet> {
@@ -53,6 +55,10 @@ export class CreateNewTweetCmdHandler
     }
 
     //future call timeline service to update timeline
+    this.tweetEventPublisher.publishTweetCreated({
+      tweetId: inserted!.id,
+      userId: inserted!.userId,
+    })
 
     return inserted as Tweet
   }

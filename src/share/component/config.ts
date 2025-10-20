@@ -39,5 +39,12 @@ export const config = {
     cloudinaryName: process.env.CLOUDINARY_CLOUD_NAME,
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
+  rabbitmq: {
+    url: process.env.RABBITMQ_URL || 'amqp://localhost',
+  },
+  mongodb: {
+    url: process.env.MONGODB_URL || 'mongodb://localhost:27017',
+    database: process.env.MONGODB_DATABASE || 'twitter',
   }
 }
