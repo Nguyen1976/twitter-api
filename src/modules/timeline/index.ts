@@ -9,7 +9,7 @@ export function setupTimelineModule(redis: Redis, channel: Channel, mongoDB: Db)
   const infra = buildTimelineInfrastructure(redis)
 
   const usecases = buildTweetUseCases(infra)
-
+  
   const timelineEventSubscriber = new TimelineEventSubscriber(
     usecases.updateTimeline,
     channel
