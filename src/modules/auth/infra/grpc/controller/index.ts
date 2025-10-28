@@ -2,16 +2,18 @@
 import {
   ServerUnaryCall,
   sendUnaryData,
-  status as grpcStatus
+  status as grpcStatus,
 } from '@grpc/grpc-js'
 import { IQueryHandler } from '~/share/interface'
-import { GetUserQuery } from '../../userQueries'
-import { IGetUserResponse } from '../../userRepository'
-import { getUserSchema } from '../../dtos/dto'
+import { getUserSchema } from '../../../domain/dtos/dto'
+import { GetUserQuery, IGetUserResponse } from '~/modules/auth/interfaces'
 
 export class AuthGrpcController {
   constructor(
-    private readonly getUserQueryHandler: IQueryHandler<GetUserQuery, IGetUserResponse>
+    private readonly getUserQueryHandler: IQueryHandler<
+      GetUserQuery,
+      IGetUserResponse
+    >
   ) {}
 
   async getUser(
@@ -19,9 +21,7 @@ export class AuthGrpcController {
     callback: sendUnaryData<any>
   ): Promise<void> {
     try {
-      const { success, data, error } = getUserSchema.safeParse(
-        call.request
-      )
+      const { success, data, error } = getUserSchema.safeParse(call.request)
       if (!success) {
         callback({
           code: grpcStatus.INVALID_ARGUMENT,

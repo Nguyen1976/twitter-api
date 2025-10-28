@@ -13,7 +13,7 @@ export class UserProfileGrpcClient implements IUserProfileService {
       endpoint
     )
   }
-
+  
   CreateUserProfile(
     data: CreateUserProfileRequest
   ): Promise<CreateUserProfileResponse> {

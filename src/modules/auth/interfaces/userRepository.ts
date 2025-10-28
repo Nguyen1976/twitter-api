@@ -1,6 +1,5 @@
 import { IRepository, IRedisRepository } from '~/share/interface'
-import { User, UserCondDTO, UserUpdateDTO } from './dtos/dto';
-
+import { User, UserCondDTO, UserUpdateDTO } from '../domain/dtos/dto'
 
 export interface IUserRepository
   extends IRepository<User, UserCondDTO, UserUpdateDTO> {}

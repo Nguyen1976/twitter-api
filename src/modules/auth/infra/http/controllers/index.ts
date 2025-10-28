@@ -1,21 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
-import { LoginUserQuery } from '../../userQueries'
-import { LoginResponse, SendVerificationOtpResponse } from '../../userResponses'
 import { ICommandHandler, IQueryHandler } from '~/share/interface'
-import {
-  CreateCommand,
-  SendVerificationOtpCommand,
-  VerifyOtpCommand,
-} from '../../userCommands'
 import {
   SendVerificationOtpSchema,
   UserCreateDTOSchema,
   UserLoginDTOSchema,
   VerifyOtpSchema,
-} from '../../dtos/dto'
+} from '../../../domain/dtos/dto'
 import ApiError from '~/share/component/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
+import { CreateCommand, LoginResponse, LoginUserQuery, SendVerificationOtpCommand, SendVerificationOtpResponse, VerifyOtpCommand } from '~/modules/auth/interfaces'
 
 export class AuthController {
   constructor(

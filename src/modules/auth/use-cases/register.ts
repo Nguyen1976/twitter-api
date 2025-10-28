@@ -2,10 +2,10 @@ import { v7 } from 'uuid'
 import { User } from '../domain/entities/user'
 import { ICommandHandler, IEmailService } from '~/share/interface'
 import { UserAlreadyExistsError } from '../domain/errors/user-errors'
-import { IPasswordHashService } from '../domain/services/index'
 import { CreateCommand } from '../interfaces/userCommands'
 import { IUserRepository } from '../interfaces/userRepository'
 import { IUserProfileService } from '~/share/interface/grpc'
+import { IPasswordHashService } from '../interfaces'
 
 export class CreateNewUserCmdHandler
   implements ICommandHandler<CreateCommand, string>

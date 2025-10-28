@@ -1,5 +1,5 @@
 import { BaseRepositorySequelize } from '~/share/repository/sequelize'
-import { UserCondDTO, UserUpdateDTO } from '../../interfaces/dtos/dto'
+import { UserCondDTO, UserUpdateDTO } from '../dtos/dto'
 import { modelName } from '~/modules/auth/infra/sequelize'
 import { Sequelize } from 'sequelize'
 import { User } from '../../domain/entities/user'
