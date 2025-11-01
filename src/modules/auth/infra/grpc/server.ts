@@ -1,5 +1,5 @@
 import { BaseGrpcServer } from '~/share/grpc/BaseGrpcServer ';
-import { AuthGrpcController } from '../../interfaces/grpc/controller';
+import { AuthGrpcController } from './controller';
 
 export class AuthGrpcServer extends BaseGrpcServer {
   constructor(private controller: AuthGrpcController) {

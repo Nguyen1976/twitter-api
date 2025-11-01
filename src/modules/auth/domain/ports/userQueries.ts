@@ -1,5 +1,4 @@
-import { GetUserDTO, UserLoginDTO } from "./dtos/dto"
-
+import { GetUserDTO, UserLoginDTO } from '../domain/dtos/dto'
 
 export interface LoginUserQuery {
   dto: UserLoginDTO

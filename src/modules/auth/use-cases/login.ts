@@ -3,11 +3,8 @@ import {
   InvalidCredentialsError,
   UserNotFoundError,
 } from '../domain/errors/user-errors'
-import { IPasswordHashService } from '../domain/services/index'
 import { config } from '~/share/component/config'
-import { LoginResponse } from '../interfaces/userResponses'
-import { LoginUserQuery } from '../interfaces/userQueries'
-import { IUserRepository } from '../interfaces/userRepository'
+import { IPasswordHashService, IUserRepository, LoginResponse, LoginUserQuery } from '../domain/ports'
 
 export class LoginUserQueryHandler
   implements IQueryHandler<LoginUserQuery, LoginResponse>

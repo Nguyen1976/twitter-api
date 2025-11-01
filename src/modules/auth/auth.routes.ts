@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { AuthController } from './interfaces/http/controllers'
-import { AuthGrpcController } from './interfaces/grpc/controller'
+import { AuthController } from './infra/http/controllers'
+import { AuthGrpcController } from './infra/grpc/controller'
 import { AuthGrpcServer } from './infra/grpc/server'
 
 export function buildAuthRouter(usecases: ReturnType<typeof import('./auth.usecases').buildAuthUseCases>) {
