@@ -6,7 +6,7 @@ import {
 } from '@grpc/grpc-js'
 import { IQueryHandler } from '~/share/interface'
 import { getUserSchema } from '../../../domain/dtos/dto'
-import { GetUserQuery, IGetUserResponse } from '~/modules/auth/interfaces'
+import { GetUserQuery, IGetUserResponse } from '~/modules/auth/domain/ports'
 
 export class AuthGrpcController {
   constructor(

@@ -9,7 +9,14 @@ import {
 import ApiError from '~/share/component/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
-import { CreateCommand, LoginResponse, LoginUserQuery, SendVerificationOtpCommand, SendVerificationOtpResponse, VerifyOtpCommand } from '~/modules/auth/interfaces'
+import {
+  CreateCommand,
+  LoginResponse,
+  LoginUserQuery,
+  SendVerificationOtpCommand,
+  SendVerificationOtpResponse,
+  VerifyOtpCommand,
+} from '~/modules/auth/domain/ports'
 
 export class AuthController {
   constructor(
