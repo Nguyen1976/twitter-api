@@ -5,11 +5,15 @@ import { TimelineEventSubscriber } from './interfaces/rabbitmq/subscribers/timel
 import { Channel } from 'amqplib'
 import { Db } from 'mongodb'
 
-export function setupTimelineModule(redis: Redis, channel: Channel, mongoDB: Db) {
-  const infra = buildTimelineInfrastructure(redis)
+export function setupTimelineModule(
+  redis: Redis,
+  channel: Channel,
+  mongoDB: Db
+) {
+  const infra = buildTimelineInfrastructure(redis, mongoDB)
 
   const usecases = buildTweetUseCases(infra)
-  
+
   const timelineEventSubscriber = new TimelineEventSubscriber(
     usecases.updateTimeline,
     channel

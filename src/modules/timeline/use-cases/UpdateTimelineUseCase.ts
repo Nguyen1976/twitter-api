@@ -1,12 +1,18 @@
 import { ICommandHandler } from '~/share/interface'
 import { ITimeLineCommand } from '../interfaces/TimeLineCommand'
 import Redis from 'ioredis'
-import { ITimelineRedisRepository } from '../interfaces/TimelineRepositories'
+import {
+  ITimelineMongoDBRepository,
+  ITimelineRedisRepository,
+} from '../interfaces/TimelineRepositories'
 
 export class UpdateTimelineCmdHandler
   implements ICommandHandler<ITimeLineCommand, void>
 {
-  constructor(private repoRedis: ITimelineRedisRepository) {}
+  constructor(
+    private repoRedis: ITimelineRedisRepository,
+    private mongoRepo: ITimelineMongoDBRepository
+  ) {}
 
   execute(command: ITimeLineCommand): Promise<void> {
     const { tweetId, userId } = command.dto

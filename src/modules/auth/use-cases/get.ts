@@ -1,7 +1,6 @@
 import { IQueryHandler } from '~/share/interface'
 import { UserNotFoundError } from '../domain/errors/user-errors'
-import { GetUserQuery } from '../interfaces/userQueries'
-import { IGetUserResponse, IUserRepository } from '../interfaces/userRepository'
+import { GetUserQuery, IGetUserResponse, IUserRepository } from '../domain/ports'
 
 export class GetUserQueryHandler
   implements IQueryHandler<GetUserQuery, IGetUserResponse>

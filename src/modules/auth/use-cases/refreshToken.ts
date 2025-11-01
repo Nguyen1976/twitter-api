@@ -5,7 +5,7 @@ import {
   RefreshTokenInvalidError,
   UserNotFoundError,
 } from '../domain/errors/user-errors'
-import { IUserRepository } from '../interfaces/userRepository'
+import { IUserRepository } from '../domain/ports'
 
 export class RefreshTokenCmdHandler implements ICommandHandler<string, string> {
   constructor(

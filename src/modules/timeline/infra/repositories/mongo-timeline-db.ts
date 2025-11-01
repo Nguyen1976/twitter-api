@@ -8,8 +8,10 @@ export class MongoDBTimelineRepository
   extends BaseMongoDBRepository<Timeline, TimelineCondDTO, TimelineUpdateDTO>
   implements ITimelineMongoDBRepository
 {
-  protected buildUpdateDocument(updateDto: { tweets: { tweetId: string; userId: string }[] }) {
-      throw new Error('Method not implemented.')
+  protected buildUpdateDocument(updateDto: {
+    tweets: { tweetId: string; userId: string }[]
+  }) {
+    throw new Error('Method not implemented.')
   }
   protected toEntity(doc: any): Timeline {
     return new Timeline(doc.userId, doc.tweetId)

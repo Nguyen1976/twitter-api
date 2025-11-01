@@ -11,9 +11,6 @@ export abstract class BaseMongoDBRepository<Entity, Cond, UpdateDTO>
   get(id: string): Promise<Entity | null> {
     throw new Error('Method not implemented.')
   }
-  insert(data: Entity): Promise<Entity> {
-    throw new Error('Method not implemented.')
-  }
 
   protected abstract toEntity(doc: any): Entity
   protected abstract toDocument(entity: Entity): any
@@ -37,7 +34,7 @@ export abstract class BaseMongoDBRepository<Entity, Cond, UpdateDTO>
     }
   }
 
-  async create(entity: Entity): Promise<Entity> {
+  async insert(entity: Entity): Promise<Entity> {
     const doc = this.toDocument(entity)
     const result: InsertOneResult = await this.collection.insertOne(doc)
     doc._id = result.insertedId
