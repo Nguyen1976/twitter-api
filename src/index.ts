@@ -12,6 +12,7 @@ import { setupTimelineModule } from './modules/timeline'
 import { RabbitMQConnection } from './share/component/rabbitmq/connection'
 import { Channel } from 'amqplib'
 import { MongoDBConnection } from './share/component/mongodb'
+import { setupFollow } from './modules/follow'
 ;(async () => {
   try {
     await sequelize.authenticate()
@@ -67,6 +68,7 @@ import { MongoDBConnection } from './share/component/mongodb'
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
     app.use('/api/v1/tweet', setupTweet(sequelize, redis, channel))
+    app.use('/api/v1/follow', setupFollow(mongoDB))
     await setupTimelineModule(redis, channel, mongoDB)
 
     app.use(errorHandlingMiddleware)

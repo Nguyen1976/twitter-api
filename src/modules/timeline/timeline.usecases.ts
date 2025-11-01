@@ -1,12 +1,15 @@
-import { UpdateTimelineCmdHandler } from './use-cases/updateTimelineUseCase';
+import { UpdateTimelineCmdHandler } from './use-cases/UpdateTimelineUseCase';
 
 
 export function buildTweetUseCases(
-  infra: ReturnType<typeof import('./timeline.infras').buildTimelineInfrastructure>
+  infra: ReturnType<
+    typeof import('./timeline.infras').buildTimelineInfrastructure
+  >
 ) {
   return {
     updateTimeline: new UpdateTimelineCmdHandler(
-        infra.timelineRepository,
+      infra.timelineRedisRepository,
+      infra.timelineMongoDBRepository
     ),
   }
 }

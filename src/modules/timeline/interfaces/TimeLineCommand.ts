@@ -1,5 +1,5 @@
-import { UpdateTimelineDTO } from "./dtos";
+import { UpdateTimelineDTO } from './dtos'
 
 export interface ITimeLineCommand {
-    dto: UpdateTimelineDTO
+  dto: UpdateTimelineDTO
 }

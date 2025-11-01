@@ -1,7 +1,6 @@
 import { ICommandHandler, IOtpService } from '~/share/interface'
+import { VerifyOtpCommand } from '../domain/ports'
 
-import { VerifyOtpCommand } from '../interfaces/userCommands'
-import { IUserRepository } from '../interfaces/userRepository'
 // ✅ Verify OTP Use Case
 export class VerifyOtpCmdHandler
   implements ICommandHandler<VerifyOtpCommand, boolean>

@@ -3,9 +3,7 @@ import {
 } from '~/share/interface'
 
 import { UserAlreadyExistsError } from '../domain/errors/user-errors'
-import { SendVerificationOtpCommand } from '../interfaces/userCommands'
-import { SendVerificationOtpResponse } from '../interfaces/userResponses'
-import { IUserRepository } from '../interfaces/userRepository'
+import { IUserRepository, SendVerificationOtpCommand, SendVerificationOtpResponse } from '../domain/ports'
 // ✅ Send Verification OTP Use Case
 export class SendVerificationOtpCmdHandler
   implements

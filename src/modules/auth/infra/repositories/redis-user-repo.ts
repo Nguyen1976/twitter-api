@@ -1,6 +1,6 @@
 import { BaseRepositoryRedis } from '~/share/repository/redis'
-import { IUserRedisRepository } from '../../interfaces/userRepository'
 import Redis from 'ioredis'
+import { IUserRedisRepository } from '../../domain/ports'
 
 export class RedisUserRepository
   extends BaseRepositoryRedis
