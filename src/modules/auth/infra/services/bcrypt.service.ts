@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { IPasswordHashService } from '../../domain/services'
+import { IPasswordHashService } from '../../domain/ports'
 
 export class BcryptPasswordHashService implements IPasswordHashService {
   async hash(password: string): Promise<string> {

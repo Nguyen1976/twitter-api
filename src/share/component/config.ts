@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import { access } from 'fs'
 
 dotenv.config()
 
@@ -16,7 +15,7 @@ export const config = {
   },
   db: {
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3309,
+    port: parseInt(process.env.DB_PORT || '3309'),
     user: process.env.DB_USERNAME || 'root',
     password: process.env.DB_PASSWORD || 'password',
     dbType: process.env.DB_TYPE || 'mysql',
@@ -39,5 +38,12 @@ export const config = {
     cloudinaryName: process.env.CLOUDINARY_CLOUD_NAME,
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
-  }
+  },
+  rabbitmq: {
+    url: process.env.RABBITMQ_URL || 'amqp://localhost',
+  },
+  mongodb: {
+    url: process.env.MONGODB_URL || 'mongodb://localhost:27017',
+    database: process.env.MONGODB_DATABASE || 'twitter',
+  },
 }

@@ -6,7 +6,8 @@ export function buildTweetUseCases(
   return {
     createTweet: new CreateNewTweetCmdHandler(
       infra.tweetRepository,
-      infra.uploadImageQueue
+      infra.uploadImageQueue,
+      infra.tweetEventPublisher
     ),
   }
 }
