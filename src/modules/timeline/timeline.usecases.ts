@@ -1,5 +1,5 @@
-import { UpdateTimelineCmdHandler } from './use-cases/UpdateTimelineUseCase';
-
+import { UpdateTimelineOnTweetCreatedUseCase } from './use-cases/UpdateTimelineOnTweetCreatedUseCase'
+import { UpdateTimelineOnFollowCreatedUseCase } from './use-cases/UpdateTimelineOnUserFollowedUseCase'
 
 export function buildTweetUseCases(
   infra: ReturnType<
@@ -7,9 +7,15 @@ export function buildTweetUseCases(
   >
 ) {
   return {
-    updateTimeline: new UpdateTimelineCmdHandler(
-      infra.timelineRedisRepository,
-      infra.timelineMongoDBRepository
-    ),
+    updateTimelineOnTweetCreatedUseCase:
+      new UpdateTimelineOnTweetCreatedUseCase(
+        infra.timelineRedisRepository,
+        infra.timelineMongoDBRepository
+      ),
+    updateTimelineOnFollowCreatedUseCase:
+      new UpdateTimelineOnFollowCreatedUseCase(
+        infra.timelineRedisRepository,
+        infra.timelineMongoDBRepository
+      ),
   }
 }

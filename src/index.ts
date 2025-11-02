@@ -68,7 +68,7 @@ import { setupFollow } from './modules/follow'
     app.use('/api/v1/auth', setupAuth(sequelize, redis))
     app.use('/api/v1/user', setupUserProfile(sequelize, redis))
     app.use('/api/v1/tweet', setupTweet(sequelize, redis, channel))
-    app.use('/api/v1/follow', setupFollow(mongoDB))
+    app.use('/api/v1/follow', setupFollow(mongoDB, channel))
     await setupTimelineModule(redis, channel, mongoDB)
 
     app.use(errorHandlingMiddleware)

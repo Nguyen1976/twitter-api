@@ -1,10 +1,8 @@
 import { RabbitMQConnection } from '~/share/component/rabbitmq/connection'
 import * as amqp from 'amqplib'
+import { ITweetCreatedEvent } from '~/share/interface/rabbitmq'
 
-export interface ITweetCreatedEvent {
-  tweetId: string
-  userId: string
-}
+
 
 export class TweetEventPublisher {
   constructor(private readonly channel: amqp.Channel) {}

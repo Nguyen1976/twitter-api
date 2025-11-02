@@ -39,14 +39,25 @@ export class RabbitMQConnection {
       durable: true,
     })
 
+    await this.channel.assertExchange('follow.events', 'topic', {
+      durable: true,
+    })
+
     // Tạo hoặc xác nhận queue timeline.tweet.created bền để nhận sự kiện tweet.created
     await this.channel.assertQueue('timeline.tweet.created', { durable: true })
+    await this.channel.assertQueue('timeline.follow.created', { durable: true })
 
     // Gắn queue vào exchange với routing key tweet.created hiểu là chạy khi có sự kiện tweet.created
     await this.channel.bindQueue(
       'timeline.tweet.created',
       'tweet.events',
       'tweet.created'
+    )
+
+    await this.channel.bindQueue(
+      'timeline.follow.created',
+      'follow.events',
+      'follow.created'
     )
 
     console.log('✅ RabbitMQ exchanges and queues setup complete')
