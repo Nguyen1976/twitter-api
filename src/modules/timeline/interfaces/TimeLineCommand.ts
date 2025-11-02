@@ -1,5 +1,9 @@
-import { UpdateTimelineDTO } from './dtos'
+import { UpdateTimelineOnFollowCreatedDTO, UpdateTimelineOnTweetCreatedDTO } from './dtos'
 
-export interface ITimeLineCommand {
-  dto: UpdateTimelineDTO
+export interface ITimeLineOnTweetCreatedCommand {
+  dto: UpdateTimelineOnTweetCreatedDTO
+}
+
+export interface ITimelineOnFollowCreatedCommand {
+  dto: UpdateTimelineOnFollowCreatedDTO
 }

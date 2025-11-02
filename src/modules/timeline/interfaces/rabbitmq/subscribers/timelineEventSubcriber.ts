@@ -1,16 +1,30 @@
 import { RabbitMQConnection } from '~/share/component/rabbitmq/connection'
-import { ITweetCreatedEvent } from '~/modules/tweet/infra/rabbitmq/publishers/tweetEventPublisher'
 import { ICommandHandler } from '~/share/interface'
-import { ITimeLineCommand } from '../../TimeLineCommand'
 import { Channel } from 'amqplib'
+import {
+  IFollowCreatedEvent,
+  ITweetCreatedEvent,
+} from '~/share/interface/rabbitmq'
+import { UpdateTimelineOnTweetCreatedDTO } from '../../dtos'
+import {
+  ITimelineOnFollowCreatedCommand,
+  ITimeLineOnTweetCreatedCommand,
+} from '../../TimeLineCommand'
 
 export class TimelineEventSubscriber {
   constructor(
-    private readonly updateTimeline: ICommandHandler<ITimeLineCommand, void>,
+    private readonly updateTimelineOnTweetCreated: ICommandHandler<
+      ITimeLineOnTweetCreatedCommand,
+      void
+    >,
+    protected readonly updateTimelineOnFollowCreated: ICommandHandler<
+      ITimelineOnFollowCreatedCommand,
+      void
+    >,
     private readonly channel: Channel
   ) {}
 
-  async subscribeTweetEvents(): Promise<void> {
+  async subscribeTweetCreatedEvents(): Promise<void> {
     try {
       await this.channel.consume(
         'timeline.tweet.created',
@@ -21,7 +35,7 @@ export class TimelineEventSubscriber {
           try {
             const event: ITweetCreatedEvent = JSON.parse(msg.content.toString())
 
-            await this.updateTimeline.execute({
+            await this.updateTimelineOnTweetCreated.execute({
               dto: {
                 tweetId: event.tweetId,
                 userId: event.userId,
@@ -30,7 +44,7 @@ export class TimelineEventSubscriber {
 
             this.channel.ack(msg)
           } catch (error) {
-            this.channel.nack(msg, false, false)//message drop
+            this.channel.nack(msg, false, false) //message drop
             // this.channel.nack(msg, false, true)//message retry
             console.error('Error processing tweet.created event:', error)
           }
@@ -39,6 +53,41 @@ export class TimelineEventSubscriber {
       )
     } catch (error) {
       console.log('Timeline service subscribed to tweet events')
+      throw error
+    }
+  }
+
+  async subscribeFollowCreatedEvents(): Promise<void> {
+    try {
+      await this.channel.consume(
+        'timeline.follow.created',
+
+        async (msg) => {
+          if (!msg) return
+
+          try {
+            const event: IFollowCreatedEvent = JSON.parse(
+              msg.content.toString()
+            )
+
+            await this.updateTimelineOnFollowCreated.execute({
+              dto: {
+                followerId: event.followerId,
+                followeeId: event.followeeId,
+              },
+            })
+
+            this.channel.ack(msg)
+          } catch (error) {
+            this.channel.nack(msg, false, false) //message drop
+            // this.channel.nack(msg, false, true)//message retry
+            console.error('Error processing follow.created event:', error)
+          }
+        },
+        { noAck: false } // đảm bảo message được ack
+      )
+    } catch (error) {
+      console.log('Timeline service subscribed to follow events')
       throw error
     }
   }
